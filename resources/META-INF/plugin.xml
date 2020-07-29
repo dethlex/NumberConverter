@@ -1,0 +1,53 @@
+<idea-plugin>
+	<id>com.dethlex.numberconverter</id>
+	<name>Number Converter</name>
+	<version>1.0.0</version>
+	<vendor email="dethlex.91@gmail.com">Alex Chrome</vendor>
+
+	<description><![CDATA[
+		A plugin to convert positive numbers from one numeral system to another.<br>
+		<br>
+		Current supported number systems:
+		<ul>
+			<li>DEC - Decimal</li>
+			<li>HEX - Hexadecimal</li>
+			<li>OCT - Octal</li>
+			<li>BIN - Binary</li>
+		</ul>
+		]]>
+	</description>
+
+	<change-notes><![CDATA[
+		<ul>
+			<li>1.0.0 - added simple editor popup menu with positive number converter</li>
+		</ul>
+		]]>
+	</change-notes>
+
+	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+	<idea-version since-build="143.0"/>
+
+	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+		 on how to target different products -->
+	<depends>com.intellij.modules.lang</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<!-- Add your extensions here -->
+	</extensions>
+
+	<actions>
+
+		<group
+			id="NumberConverter.Group"
+			class="com.dethlex.numberconverter.ConvertActionGroup"
+			popup="true"
+			text="Convert to..."
+			description="Convert to different number system"
+			icon="/menu_icon.png"
+		>
+			<add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>
+		</group>
+
+	</actions>
+
+</idea-plugin>

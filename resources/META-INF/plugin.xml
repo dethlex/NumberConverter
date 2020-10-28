@@ -1,11 +1,11 @@
 <idea-plugin>
 	<id>com.dethlex.numberconverter</id>
 	<name>Number Converter</name>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<vendor email="dethlex.91@gmail.com">Alex Chrome</vendor>
 
 	<description><![CDATA[
-		A plugin to convert positive numbers from one numeral system to another.<br>
+		A plugin to convert numbers from one numeral system to another for use in IDE.<br>
 		<br>
 		Current supported number systems:
 		<ul>
@@ -19,6 +19,7 @@
 
 	<change-notes><![CDATA[
 		<ul>
+			<li>1.2.0 - negative conversion support</li>
 			<li>1.1.0 - changed compatibility</li>
 			<li>1.0.0 - added simple editor popup menu with positive number converter</li>
 		</ul>

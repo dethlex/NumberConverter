@@ -43,7 +43,7 @@ public class ConvertAction extends AnAction {
 	private final ConvertType type_;
 
 	private final static String ERR_UT = "Unknown type";
-	private final static String ERR_CC = "Cannot convert";
+	private final static String ERR_CC = "Can't convert";
 
 	public ConvertAction(ConvertType type) {
 		super();
@@ -51,12 +51,12 @@ public class ConvertAction extends AnAction {
 	}
 
 	private String ConvertNumber(String value) {
-		int number;
 		value = value.strip();
+		int number;
+		boolean negative = value.startsWith("-");
 
-		//TODO: add negative conversion
-		if (value.startsWith("-"))
-			return ERR_CC;
+		if (negative)
+			value = value.substring(1);
 
 		try {
 			if (value.startsWith("0b")) {
@@ -75,7 +75,7 @@ public class ConvertAction extends AnAction {
 		} catch (NumberFormatException e) {
 			return ERR_CC;
 		}
-		return value;
+		return negative ? "-"+value : value;
 	}
 
 	@Override

@@ -52,6 +52,7 @@ public class ConvertAction extends AnAction {
 
 	private String ConvertNumber(String value) {
 		value = value.strip();
+		value = value.replaceAll("_", "");
 		int number;
 		boolean negative = value.startsWith("-");
 

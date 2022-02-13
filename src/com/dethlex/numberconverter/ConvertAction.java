@@ -111,24 +111,26 @@ public class ConvertAction extends AnAction {
 	@Override
 	public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
 		final Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
+		final Document document = editor.getDocument();
+		final Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+
 		CaretModel caretModel = editor.getCaretModel();
 		List<Caret> caretList = FilterCaretWithSelection(caretModel.getAllCarets());
 
-		for (Caret caret : caretList) {
-			final Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
-			final Document document = editor.getDocument();
+		WriteCommandAction.runWriteCommandAction(project, () ->
+			caretList.forEach(caret -> {
 
-			int selectionStart = caret.getSelectionStart();
-			int selectionEnd = caret.getSelectionEnd();
+				int selectionStart = caret.getSelectionStart();
+				int selectionEnd = caret.getSelectionEnd();
+				CharSequence convertedNumber = ConvertNumber(caret.getSelectedText());
 
-			CharSequence convertedNumber = ConvertNumber(caret.getSelectedText());
-			WriteCommandAction.runWriteCommandAction(project, () ->
-					document.replaceString(selectionStart, selectionEnd, convertedNumber)
-			);
+				document.replaceString(selectionStart, selectionEnd, convertedNumber);
 
-			caret.removeSelection();
-			caret.moveToOffset(selectionStart);
-		}
+				caret.removeSelection();
+				caret.moveToOffset(selectionStart);
+
+			})
+		);
 	}
 
 	@Override

@@ -53,8 +53,10 @@ public class ConvertAction extends AnAction {
 	}
 
 	private String ConvertNumber(String value) {
-		value = value.strip();
-		value = value.replaceAll("_", "");
+		value = value.strip()
+				.replaceAll("_", "")
+				.toUpperCase();
+
 		BigInteger number;
 		boolean negative = value.startsWith("-");
 
@@ -62,10 +64,10 @@ public class ConvertAction extends AnAction {
 			value = value.substring(1);
 
 		try {
-			if (value.startsWith("0b") || value.startsWith("0B")) {
+			if (value.startsWith("0B")) {
 				value = value.substring(2);
 				number = new BigInteger(value, 2);
-			} else if (value.startsWith("0x") || value.startsWith("0X")) {
+			} else if (value.startsWith("0X")) {
 				value = value.substring(2);
 				number = new BigInteger(value, 16);
 			} else if (value.startsWith("0")) {
@@ -74,26 +76,27 @@ public class ConvertAction extends AnAction {
 			} else {
 				number = new BigInteger(value);
 			}
-
-			switch (type_) {
-				case DEC:
-					value = number.toString();
-					break;
-				case HEX:
-					value = "0x" + number.toString(16);
-					break;
-				case OCT:
-					value = "0" + number.toString(8);
-					break;
-				case BIN:
-					value = "0b" + number.toString(2);
-					break;
-				default:
-					value = ERR_UT;
-			}
 		} catch (NumberFormatException e) {
 			return ERR_CC;
 		}
+
+		switch (type_) {
+			case DEC:
+				value = number.toString();
+				break;
+			case HEX:
+				value = "0x" + number.toString(16);
+				break;
+			case OCT:
+				value = "0" + number.toString(8);
+				break;
+			case BIN:
+				value = "0b" + number.toString(2);
+				break;
+			default:
+				value = ERR_UT;
+		}
+
 		return negative ? "-" + value : value;
 	}
 
@@ -143,7 +146,14 @@ public class ConvertAction extends AnAction {
 
 	@Override
 	public void update(@NotNull AnActionEvent anActionEvent) {
-		final Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
+		// don't know why here java.lang.AssertionError
+		var dataKeyEditor = CommonDataKeys.EDITOR;
+		// so added additional null check
+		if (dataKeyEditor == null) {
+			return;
+		}
+
+		final Editor editor = anActionEvent.getRequiredData(dataKeyEditor);
 		List<Caret> caretList = FilterCaretWithSelection(editor.getCaretModel().getAllCarets());
 
 		anActionEvent.getPresentation().setEnabledAndVisible(!caretList.isEmpty());

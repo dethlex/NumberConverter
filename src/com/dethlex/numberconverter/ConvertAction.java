@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,31 +55,38 @@ public class ConvertAction extends AnAction {
 	private String ConvertNumber(String value) {
 		value = value.strip();
 		value = value.replaceAll("_", "");
-		int number;
+		BigInteger number;
 		boolean negative = value.startsWith("-");
 
 		if (negative)
 			value = value.substring(1);
 
 		try {
-			if (value.startsWith("0b")) {
+			if (value.startsWith("0b") || value.startsWith("0B")) {
 				value = value.substring(2);
-				number = Integer.parseInt(value, 2);
-			} else
-				number = Integer.decode(value);
+				number = new BigInteger(value, 2);
+			} else if (value.startsWith("0x") || value.startsWith("0X")) {
+				value = value.substring(2);
+				number = new BigInteger(value, 16);
+			} else if (value.startsWith("0")) {
+				value = value.substring(1);
+				number = new BigInteger(value, 8);
+			} else {
+				number = new BigInteger(value);
+			}
 
 			switch (type_) {
 				case DEC:
-					value = Integer.toString(number);
+					value = number.toString();
 					break;
 				case HEX:
-					value = "0x" + Integer.toHexString(number).toUpperCase();
+					value = "0x" + number.toString(16);
 					break;
 				case OCT:
-					value = "0" + Integer.toOctalString(number);
+					value = "0" + number.toString(8);
 					break;
 				case BIN:
-					value = "0b" + Integer.toBinaryString(number);
+					value = "0b" + number.toString(2);
 					break;
 				default:
 					value = ERR_UT;

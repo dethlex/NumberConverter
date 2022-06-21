@@ -146,14 +146,9 @@ public class ConvertAction extends AnAction {
 
 	@Override
 	public void update(@NotNull AnActionEvent anActionEvent) {
-		// don't know why here java.lang.AssertionError
-		var dataKeyEditor = CommonDataKeys.EDITOR;
-		// so added additional null check
-		if (dataKeyEditor == null) {
-			return;
-		}
+		super.update(anActionEvent);
 
-		final Editor editor = anActionEvent.getRequiredData(dataKeyEditor);
+		final Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
 		List<Caret> caretList = FilterCaretWithSelection(editor.getCaretModel().getAllCarets());
 
 		anActionEvent.getPresentation().setEnabledAndVisible(!caretList.isEmpty());

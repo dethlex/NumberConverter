@@ -6,6 +6,17 @@ import org.jetbrains.annotations.Nullable;
 
 public class ConvertActionGroup extends ActionGroup {
 
+	private final AnAction[] convertActions;
+
+	public ConvertActionGroup() {
+		convertActions = new AnAction[]{
+			new Dec(),
+			new Hex(),
+			new Oct(),
+			new Bin(),
+		};
+	}
+
 	public static class Dec extends ConvertAction {
 		public Dec() {
 			super(ConvertType.DEC);
@@ -33,11 +44,6 @@ public class ConvertActionGroup extends ActionGroup {
 	@NotNull
 	@Override
 	public AnAction[] getChildren(@Nullable AnActionEvent anActionEvent) {
-		return new AnAction[]{
-			new Dec(),
-			new Hex(),
-			new Oct(),
-			new Bin(),
-		};
+		return convertActions;
 	}
 }

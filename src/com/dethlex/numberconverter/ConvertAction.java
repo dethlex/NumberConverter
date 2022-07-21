@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,14 +68,14 @@ public class ConvertAction extends AnAction {
 			if (value.startsWith("0B")) {
 				value = value.substring(2);
 				number = new BigInteger(value, 2);
-			} else if (value.startsWith("0X")) {
-				value = value.substring(2);
-				number = new BigInteger(value, 16);
 			} else if (value.startsWith("0")) {
 				value = value.substring(1);
 				number = new BigInteger(value, 8);
+			} else if (value.startsWith("0X")) {
+				value = value.substring(2);
+				number = new BigInteger(value, 16);
 			} else {
-				number = new BigInteger(value);
+				number = new BigDecimal(value).toBigInteger();
 			}
 		} catch (NumberFormatException e) {
 			return ERR_CC;
@@ -85,7 +86,7 @@ public class ConvertAction extends AnAction {
 				value = number.toString();
 				break;
 			case HEX:
-				value = "0x" + number.toString(16);
+				value = "0x" + number.toString(16).toUpperCase();
 				break;
 			case OCT:
 				value = "0" + number.toString(8);

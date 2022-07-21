@@ -1,11 +1,13 @@
 <idea-plugin>
 	<id>com.dethlex.numberconverter</id>
 	<name>Number Converter</name>
-	<version>1.4.2</version>
+	<version>1.4.3</version>
 	<vendor email="dethlex.91@gmail.com">Alex Chrome</vendor>
 
 	<description><![CDATA[
-		A plugin to convert numbers from one numeral system to another for use in IDE.<br>
+		A plugin to convert numbers from one numeral system to another for use in IDE.
+		For floating point numbers, the fractional part will be discarded.
+		<br>
 		<br>
 		Support multi carets and shortcuts.
 		<br>
@@ -21,6 +23,7 @@
 
 	<change-notes><![CDATA[
 		<ul>
+			<li>1.4.3 - support conversion from engineering type</li>
 			<li>1.4.2 - support big integer</li>
 			<li>1.4.1 - some fixes</li>
 			<li>1.4.0 - support multi carets and shortcuts</li>

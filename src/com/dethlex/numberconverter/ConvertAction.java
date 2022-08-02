@@ -53,7 +53,7 @@ public class ConvertAction extends AnAction {
 		type_ = type;
 	}
 
-	private String ConvertNumber(String value) {
+	public String ConvertNumber(String value) {
 		value = value.strip()
 				.replaceAll("_", "")
 				.toUpperCase();
@@ -65,16 +65,16 @@ public class ConvertAction extends AnAction {
 			value = value.substring(1);
 
 		try {
-			if (value.startsWith("0B")) {
+			if (value.startsWith("0B")) { // BIN
 				value = value.substring(2);
 				number = new BigInteger(value, 2);
-			} else if (value.startsWith("0")) {
-				value = value.substring(1);
-				number = new BigInteger(value, 8);
-			} else if (value.startsWith("0X")) {
+			} else if (value.startsWith("0X")) { // HEX
 				value = value.substring(2);
 				number = new BigInteger(value, 16);
-			} else {
+			} else if (value.startsWith("0")) { // OCT
+				value = value.substring(1);
+				number = new BigInteger(value, 8);
+			} else { // DEC
 				number = new BigDecimal(value).toBigInteger();
 			}
 		} catch (NumberFormatException e) {
@@ -82,8 +82,8 @@ public class ConvertAction extends AnAction {
 		}
 
 		switch (type_) {
-			case DEC:
-				value = number.toString();
+			case BIN:
+				value = "0b" + number.toString(2);
 				break;
 			case HEX:
 				value = "0x" + number.toString(16).toUpperCase();
@@ -91,8 +91,8 @@ public class ConvertAction extends AnAction {
 			case OCT:
 				value = "0" + number.toString(8);
 				break;
-			case BIN:
-				value = "0b" + number.toString(2);
+			case DEC:
+				value = number.toString();
 				break;
 			default:
 				value = ERR_UT;

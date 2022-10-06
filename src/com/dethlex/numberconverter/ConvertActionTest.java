@@ -6,157 +6,130 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConvertActionTest {
-	ConvertAction caDEC = new ConvertAction(ConvertType.DEC);
-	ConvertAction caHEX = new ConvertAction(ConvertType.HEX);
-	ConvertAction caOCT = new ConvertAction(ConvertType.OCT);
-	ConvertAction caBIN = new ConvertAction(ConvertType.BIN);
+	static class TestData {
+		String Value;
+		String Expected;
+		String Error;
 
-	// To DEC
-	@Test
-	@DisplayName("DEC to DEC")
-	void testFromDECtoDEC() {
-		assertEquals("100", caDEC.ConvertNumber("100"),"DEC != DEC");
+		public TestData(String value, String expected, String error) {
+			Value = value;
+			Expected = expected;
+			Error = error;
+		}
+	}
+
+	private void assertTestData(ConvertType.NumeralSystem system, TestData[] tests) {
+		ConvertAction action = new ConvertAction(system);
+		for (TestData test : tests) {
+			assertEquals(test.Expected, action.ConvertNumber(test.Value), test.Error);
+		}
 	}
 
 	@Test
-	@DisplayName("HEX to DEC")
-	void testFromHEXtoDEC() {
-		assertEquals("100", caDEC.ConvertNumber("0x64"),"DEC != HEX");
+	@DisplayName("To DEC")
+	void testToDec() {
+		var tests = new TestData[]{
+				new TestData("100", "100", "DEC != DEC"),
+				new TestData("0x64","100","HEX != DEC"),
+				new TestData("0144","100","OCT != DEC"),
+				new TestData("0b1100100","100","BIN != DEC"),
+
+				new TestData("1e2","100","Engineering DEC != DEC"),
+
+				new TestData("-100","-100","Negative DEC != DEC"),
+				new TestData("-0x64","-100","Negative HEX != DEC"),
+				new TestData("-0144","-100","Negative OCT != DEC"),
+				new TestData("-0b1100100","-100","Negative BIN != DEC"),
+
+				new TestData("92233720368547758070","92233720368547758070","BIG DEC != BIG DEC"),
+				new TestData("0x4FFFFFFFFFFFFFFF6","92233720368547758070","BIG HEX != BIG DEC"),
+				new TestData("011777777777777777777766","92233720368547758070","BIG OCT != BIG DEC"),
+				new TestData("0b1001111111111111111111111111111111111111111111111111111111111110110","92233720368547758070","BIG BIN != BIG DEC"),
+
+				new TestData("qwerty","can't convert","Can't convert DEC"),
+		};
+
+		assertTestData(ConvertType.NumeralSystem.DEC, tests);
 	}
 
 	@Test
-	@DisplayName("OCT to DEC")
-	void testFromOCTtoDEC() {
-		assertEquals("100", caDEC.ConvertNumber("0144"),"DEC != OCT");
+	@DisplayName("To HEX")
+	void testToHex(){
+		var tests = new TestData[]{
+				new TestData("100", "0x64", "DEC != HEX"),
+				new TestData("0x64", "0x64", "HEX != HEX"),
+				new TestData("0144", "0x64", "OCT != HEX"),
+				new TestData("0b1100100", "0x64", "BIN != HEX"),
+
+				new TestData("1e2", "0x64", "Engineering DEC != HEX"),
+
+				new TestData("-100", "0xFFFFFF9C", "Negative DEC != HEX"),
+				new TestData("-0x64","0xFFFFFF9C","Negative HEX != HEX"),
+				new TestData("-0144","0xFFFFFF9C","Negative OCT != HEX"),
+				new TestData("-0b1100100","0xFFFFFF9C","Negative BIN != HEX"),
+
+				new TestData("92233720368547758070","0x4FFFFFFFFFFFFFFF6","BIG DEC != BIG HEX"),
+				new TestData("0x4FFFFFFFFFFFFFFF6","0x4FFFFFFFFFFFFFFF6","BIG HEX != BIG HEX"),
+				new TestData("011777777777777777777766","0x4FFFFFFFFFFFFFFF6","BIG OCT != BIG HEX"),
+				new TestData("0b1001111111111111111111111111111111111111111111111111111111111110110","0x4FFFFFFFFFFFFFFF6","BIG BIN != BIG HEX"),
+
+				new TestData("qwerty","can't convert","Can't convert HEX"),
+		};
+
+		assertTestData(ConvertType.NumeralSystem.HEX, tests);
 	}
 
 	@Test
-	@DisplayName("BIN to DEC")
-	void testFromBINtoDEC() {
-		assertEquals("100", caDEC.ConvertNumber("0b1100100"),"DEC != BIN");
+	@DisplayName("To OCT")
+	void testToOct() {
+		var tests = new TestData[]{
+				new TestData("100", "0144", "DEC != OCT"),
+				new TestData("0x64", "0144", "HEX != OCT"),
+				new TestData("0144", "0144", "OCT != OCT"),
+				new TestData("0b1100100", "0144", "BIN != OCT"),
+
+				new TestData("1e2", "0144", "Engineering DEC != OCT"),
+
+				new TestData("-100", "037777777634", "Negative DEC != OCT"),
+				new TestData("-0x64","037777777634","Negative HEX != OCT"),
+				new TestData("-0144","037777777634","Negative OCT != OCT"),
+				new TestData("-0b1100100","037777777634","Negative BIN != OCT"),
+
+				new TestData("92233720368547758070","011777777777777777777766","BIG DEC != BIG OCT"),
+				new TestData("0x4FFFFFFFFFFFFFFF6","011777777777777777777766","BIG HEX != BIG OCT"),
+				new TestData("011777777777777777777766","011777777777777777777766","BIG OCT != BIG OCT"),
+				new TestData("0b1001111111111111111111111111111111111111111111111111111111111110110","011777777777777777777766","BIG BIN != BIG OCT"),
+
+				new TestData("qwerty","can't convert","Can't convert OCT"),
+		};
+
+		assertTestData(ConvertType.NumeralSystem.OCT, tests);
 	}
 
 	@Test
-	@DisplayName("Engineering type to DEC")
-	void testFromENGtoDEC() {
-		assertEquals("100", caDEC.ConvertNumber("1e2"),"Engineering DEC != DEC");
-	}
+	@DisplayName("To BIN")
+	void testToBin() {
+		var tests = new TestData[]{
+				new TestData("100", "0b1100100", "DEC != BIN"),
+				new TestData("0x64", "0b1100100", "HEX != BIN"),
+				new TestData("0144", "0b1100100", "OCT != BIN"),
+				new TestData("0b1100100", "0b1100100", "BIN != BIN"),
 
-	// To HEX
-	@Test
-	@DisplayName("DEC to HEX")
-	void testFromDECtoHEX() {
-		assertEquals("0x64", caHEX.ConvertNumber("100"),"HEX != DEC");
-	}
+				new TestData("1e2", "0b1100100", "Engineering DEC  != BIN"),
 
-	@Test
-	@DisplayName("HEX to HEX")
-	void testFromHEXtoHEX() {
-		assertEquals("0x64", caHEX.ConvertNumber("0x64"),"HEX != HEX");
-	}
+				new TestData("-100", "0b11111111111111111111111110011100", "Negative DEC != BIN"),
+				new TestData("-0x64","0b11111111111111111111111110011100","Negative HEX != BIN"),
+				new TestData("-0144","0b11111111111111111111111110011100","Negative OCT != BIN"),
+				new TestData("-0b1100100","0b11111111111111111111111110011100","Negative BIN != BIN"),
 
-	@Test
-	@DisplayName("OCT to HEX")
-	void testFromOCTtoHEX() {
-		assertEquals("0x64", caHEX.ConvertNumber("0144"),"HEX != OCT");
-	}
+				new TestData("92233720368547758070","0b1001111111111111111111111111111111111111111111111111111111111110110","BIG DEC != BIG BIN"),
+				new TestData("0x4FFFFFFFFFFFFFFF6","0b1001111111111111111111111111111111111111111111111111111111111110110","BIG HEX != BIG BIN"),
+				new TestData("011777777777777777777766","0b1001111111111111111111111111111111111111111111111111111111111110110","BIG OCT != BIG BIN"),
+				new TestData("0b1001111111111111111111111111111111111111111111111111111111111110110","0b1001111111111111111111111111111111111111111111111111111111111110110","BIG BIN != BIG BIN"),
 
-	@Test
-	@DisplayName("BIN to HEX")
-	void testFromBINtoHEX() {
-		assertEquals("0x64", caHEX.ConvertNumber("0b1100100"),"HEX != BIN");
-	}
+				new TestData("qwerty","can't convert","Can't convert BIN"),
+		};
 
-	@Test
-	@DisplayName("Engineering type to HEX")
-	void testFromENGtoHEX() {
-		assertEquals("0x64", caHEX.ConvertNumber("1e2"),"Engineering DEC != HEX");
-	}
-
-	// To OCT
-	@Test
-	@DisplayName("DEC to OCT")
-	void testFromDECtoOCT() {
-		assertEquals("0144", caOCT.ConvertNumber("100"),"OCT != DEC");
-	}
-
-	@Test
-	@DisplayName("HEX to OCT")
-	void testFromHEXtoOCT() {
-		assertEquals("0144", caOCT.ConvertNumber("0x64"),"OCT != HEX");
-	}
-
-	@Test
-	@DisplayName("OCT to OCT")
-	void testFromOCTtoOCT() {
-		assertEquals("0144", caOCT.ConvertNumber("0144"),"OCT != OCT");
-	}
-
-	@Test
-	@DisplayName("BIN to OCT")
-	void testFromBINtoOCT() {
-		assertEquals("0144", caOCT.ConvertNumber("0b1100100"),"OCT != BIN");
-	}
-
-	@Test
-	@DisplayName("Engineering type to OCT")
-	void testFromENGtoOCT() {
-		assertEquals("0144", caOCT.ConvertNumber("1e2"),"Engineering DEC != OCT");
-	}
-
-	// To BIN
-	@Test
-	@DisplayName("DEC to BIN")
-	void testFromDECtoBIN() {
-		assertEquals("0b1100100", caBIN.ConvertNumber("100"),"BIN != DEC");
-	}
-
-	@Test
-	@DisplayName("HEX to BIN")
-	void testFromHEXtoBIN() {
-		assertEquals("0b1100100", caBIN.ConvertNumber("0x64"),"BIN != HEX");
-	}
-
-	@Test
-	@DisplayName("OCT to BIN")
-	void testFromOCTtoBIN() {
-		assertEquals("0b1100100", caBIN.ConvertNumber("0144"),"BIN != OCT");
-	}
-
-	@Test
-	@DisplayName("BIN to BIN")
-	void testFromBINtoBIN() {
-		assertEquals("0b1100100", caBIN.ConvertNumber("0b1100100"),"BIN != BIN");
-	}
-
-	@Test
-	@DisplayName("Engineering type to BIN")
-	void testFromENGtoBIN() {
-		assertEquals("0b1100100", caBIN.ConvertNumber("1e2"),"Engineering DEC != BIN");
-	}
-
-	// can't convert
-	@Test
-	@DisplayName("Impossible DEC conversion")
-	void testCantConvertDEC() {
-		assertEquals("can't convert", caDEC.ConvertNumber("qwerty"),"Can't convert DEC");
-	}
-
-	@Test
-	@DisplayName("Impossible HEX conversion")
-	void testCantConvertHEX() {
-		assertEquals("can't convert", caHEX.ConvertNumber("qwerty"),"Can't convert HEX");
-	}
-
-	@Test
-	@DisplayName("Impossible OCT conversion")
-	void testCantConvertOCT() {
-		assertEquals("can't convert", caOCT.ConvertNumber("qwerty"),"Can't convert OCT");
-	}
-
-	@Test
-	@DisplayName("Impossible BIN conversion")
-	void testCantConvertBIN() {
-		assertEquals("can't convert", caBIN.ConvertNumber("qwerty"),"Can't convert BIN");
+		assertTestData(ConvertType.NumeralSystem.BIN, tests);
 	}
 }

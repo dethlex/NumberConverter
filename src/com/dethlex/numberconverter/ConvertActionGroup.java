@@ -19,25 +19,25 @@ public class ConvertActionGroup extends ActionGroup {
 
 	public static class Dec extends ConvertAction {
 		public Dec() {
-			super(ConvertType.DEC);
+			super(ConvertType.NumeralSystem.DEC);
 		}
 	}
 
 	public static class Hex extends ConvertAction {
 		public Hex() {
-			super(ConvertType.HEX);
+			super(ConvertType.NumeralSystem.HEX);
 		}
 	}
 
 	public static class Oct extends ConvertAction {
 		public Oct() {
-			super(ConvertType.OCT);
+			super(ConvertType.NumeralSystem.OCT);
 		}
 	}
 
 	public static class Bin extends ConvertAction {
 		public Bin() {
-			super(ConvertType.BIN);
+			super(ConvertType.NumeralSystem.BIN);
 		}
 	}
 

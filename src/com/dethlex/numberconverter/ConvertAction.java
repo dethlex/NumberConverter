@@ -9,96 +9,31 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
-enum ConvertType {
-	HEX {
-		@Override
-		public String toString() {
-			return "HEX";
-		}
-	},
-	BIN {
-		@Override
-		public String toString() {
-			return "BIN";
-		}
-	},
-	OCT {
-		@Override
-		public String toString() {
-			return "OCT";
-		}
-	},
-	DEC {
-		@Override
-		public String toString() {
-			return "DEC";
-		}
-	},
-}
-
 public class ConvertAction extends AnAction {
 
-	private final ConvertType type_;
+	private final ConvertType.NumeralSystem type;
 
-	private final static String ERR_UT = "unknown type";
 	private final static String ERR_CC = "can't convert";
 
-	public ConvertAction(ConvertType type) {
+	public ConvertAction(ConvertType.NumeralSystem type) {
 		super();
-		type_ = type;
+		this.type = type;
 	}
 
 	public String ConvertNumber(String value) {
-		value = value.strip()
-				.replaceAll("_", "")
-				.toUpperCase();
+		value = value.strip().replaceAll("_", "");
 
-		BigInteger number;
-		boolean negative = value.startsWith("-");
-
-		if (negative)
-			value = value.substring(1);
-
+		ConvertNumber number;
 		try {
-			if (value.startsWith("0B")) { // BIN
-				value = value.substring(2);
-				number = new BigInteger(value, 2);
-			} else if (value.startsWith("0X")) { // HEX
-				value = value.substring(2);
-				number = new BigInteger(value, 16);
-			} else if (value.startsWith("0")) { // OCT
-				value = value.substring(1);
-				number = new BigInteger(value, 8);
-			} else { // DEC
-				number = new BigDecimal(value).toBigInteger();
-			}
+			number = new ConvertNumber(value);
 		} catch (NumberFormatException e) {
 			return ERR_CC;
 		}
 
-		switch (type_) {
-			case BIN:
-				value = "0b" + number.toString(2);
-				break;
-			case HEX:
-				value = "0x" + number.toString(16).toUpperCase();
-				break;
-			case OCT:
-				value = "0" + number.toString(8);
-				break;
-			case DEC:
-				value = number.toString();
-				break;
-			default:
-				value = ERR_UT;
-		}
-
-		return negative ? "-" + value : value;
+		return number.toString(type);
 	}
 
 	private Pair<Integer,String> ConvertAll(@NotNull List<Caret> caretList) {
@@ -157,7 +92,7 @@ public class ConvertAction extends AnAction {
 			return;
 
 		Pair<Integer,String> p = ConvertAll(caretList);
-		String text = type_.toString();
+		String text = type.toString();
 		if (p.first > 1) {
 			text += " ("+ p.first +")";
 		} else {

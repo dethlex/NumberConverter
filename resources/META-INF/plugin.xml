@@ -1,17 +1,25 @@
 <idea-plugin>
 	<id>com.dethlex.numberconverter</id>
 	<name>Number Converter</name>
-	<version>1.4.4</version>
+	<version>1.5.0</version>
 	<vendor email="dethlex.91@gmail.com">Alex Chrome</vendor>
 
 	<description><![CDATA[
-		A plugin to convert numbers from one numeral system to another for use in IDE.
+		The plugin to convert numbers from one numeral system to another in any JetBrains IDE.
 		For floating point numbers, the fractional part will be discarded.
 		<br>
 		<br>
-		Support multi carets and shortcuts.
+		<h3>Features:</h3>
+		<ul>
+			<li>big integers</li>
+			<li>engineering types</li>
+			<li>negative conversion (bit shifting)</li>
+			<li>multi carets</li>
+			<li>shortcuts</li>
+		</ul>
 		<br>
-		Current supported number systems:
+		<br>
+		<h3>Current supported numeral systems:</h3>
 		<ul>
 			<li>DEC - Decimal</li>
 			<li>HEX - Hexadecimal</li>
@@ -23,6 +31,7 @@
 
 	<change-notes><![CDATA[
 		<ul>
+			<li>1.5.0 - negative conversion</li>
 			<li>1.4.4 - fix errors</li>
 			<li>1.4.3 - support conversion from engineering type</li>
 			<li>1.4.2 - support big integer</li>
@@ -53,7 +62,7 @@
 			id="NumberConverter.Group"
 			popup="true"
 			text="Convert to..."
-			description="Convert to different number system"
+			description="Convert to different numeral system"
 			icon="/menu_icon.png"
 		>
 			<action id="NumberConverter.Group.Dec" class="com.dethlex.numberconverter.ConvertActionGroup$Dec" text="DEC" >

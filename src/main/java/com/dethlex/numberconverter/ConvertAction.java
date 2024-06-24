@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 public class ConvertAction extends AnAction {
 
-    private final ConvertType.NumeralSystem type;
+    private final NumeralSystem type;
 
     private final static String ERR_CC = "can't convert";
 
-    public ConvertAction(ConvertType.NumeralSystem type) {
+    public ConvertAction(NumeralSystem type) {
         super();
         this.type = type;
     }

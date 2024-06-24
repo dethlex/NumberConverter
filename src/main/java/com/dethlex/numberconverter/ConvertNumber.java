@@ -24,7 +24,7 @@ public final class ConvertNumber {
     private BigInteger ToBigInteger(String value) {
         var system = ConvertType.numeralSystem(value);
 
-        if (system == ConvertType.NumeralSystem.DEC)
+        if (system == NumeralSystem.DEC)
             return new BigDecimal(value).toBigInteger();
 
         return new BigInteger(
@@ -34,9 +34,9 @@ public final class ConvertNumber {
     }
 
     // shifting negative non-decimal numbers
-    private BigInteger ShiftForType(ConvertType.NumeralSystem system) {
+    private BigInteger ShiftForType(NumeralSystem system) {
         var integer = this.integer;
-        if (negative && system != ConvertType.NumeralSystem.DEC) {
+        if (negative && system != NumeralSystem.DEC) {
             var p2 = Integer.highestOneBit(integer.bitCount() - 1) * 2;
             p2 = Math.max(p2, 16);
             integer = integer.add(BigInteger.ONE.shiftLeft(p2 * 2));
@@ -44,7 +44,7 @@ public final class ConvertNumber {
         return integer;
     }
 
-    public String toString(ConvertType.NumeralSystem system) {
+    public String toString(NumeralSystem system) {
         var integer = ShiftForType(system);
         return ConvertType.startWith(system) + integer.toString(ConvertType.radix(system)).toUpperCase();
     }

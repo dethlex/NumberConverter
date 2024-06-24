@@ -17,7 +17,7 @@ public class ConvertActionTest {
         }
     }
 
-    private void assertTestData(ConvertType.NumeralSystem system, TestData[] tests) {
+    private void assertTestData(NumeralSystem system, TestData[] tests) {
         ConvertAction action = new ConvertAction(system);
         for (TestData test : tests) {
             Assert.assertEquals(test.Error, test.Expected, action.ConvertNumber(test.Value));
@@ -48,7 +48,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert DEC"),
         };
 
-        assertTestData(ConvertType.NumeralSystem.DEC, tests);
+        assertTestData(NumeralSystem.DEC, tests);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert HEX"),
         };
 
-        assertTestData(ConvertType.NumeralSystem.HEX, tests);
+        assertTestData(NumeralSystem.HEX, tests);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert OCT"),
         };
 
-        assertTestData(ConvertType.NumeralSystem.OCT, tests);
+        assertTestData(NumeralSystem.OCT, tests);
     }
 
     @Test
@@ -129,6 +129,6 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert BIN"),
         };
 
-        assertTestData(ConvertType.NumeralSystem.BIN, tests);
+        assertTestData(NumeralSystem.BIN, tests);
     }
 }

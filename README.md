@@ -4,6 +4,7 @@ The plugin to convert numbers from one numeral system to another in any JetBrain
 For floating point numbers, the fractional part will be discarded.
 
 ### Features:
+
 - big integers
 - engineering types
 - negative conversion (bit shifting)
@@ -11,6 +12,7 @@ For floating point numbers, the fractional part will be discarded.
 - shortcuts
 
 ### Current supported numeral systems:
+
 - DEC - Decimal
 - HEX - Hexadecimal
 - OCT - Octal

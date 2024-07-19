@@ -17,10 +17,10 @@ public class ConvertActionTest {
         }
     }
 
-    private void assertTestData(NumeralSystem system, TestData[] tests) {
+    private void assertTestData(ConvertTypes system, TestData[] tests) {
         ConvertAction action = new ConvertAction(system);
         for (TestData test : tests) {
-            Assert.assertEquals(test.Error, test.Expected, action.ConvertNumber(test.Value));
+            Assert.assertEquals(test.Error, test.Expected, action.ConvertByType(test.Value));
         }
     }
 
@@ -48,7 +48,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert DEC"),
         };
 
-        assertTestData(NumeralSystem.DEC, tests);
+        assertTestData(ConvertTypes.DEC, tests);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert HEX"),
         };
 
-        assertTestData(NumeralSystem.HEX, tests);
+        assertTestData(ConvertTypes.HEX, tests);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert OCT"),
         };
 
-        assertTestData(NumeralSystem.OCT, tests);
+        assertTestData(ConvertTypes.OCT, tests);
     }
 
     @Test
@@ -129,6 +129,17 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert BIN"),
         };
 
-        assertTestData(NumeralSystem.BIN, tests);
+        assertTestData(ConvertTypes.BIN, tests);
+    }
+
+    @Test
+    @DisplayName("To DATE")
+    public void testToDate() {
+        var tests = new TestData[]{
+                new TestData("1721073026", "2024-07-15 22:50:26", "UNIX SEC != DATE"),
+                new TestData("1721073026000", "2024-07-15 22:50:26", "UNIX MILLI != DATE"),
+        };
+
+        assertTestData(ConvertTypes.DATETIME, tests);
     }
 }

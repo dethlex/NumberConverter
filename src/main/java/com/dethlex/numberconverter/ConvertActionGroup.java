@@ -14,30 +14,37 @@ public class ConvertActionGroup extends ActionGroup {
                 new Hex(),
                 new Oct(),
                 new Bin(),
+                new DateTime(),
         };
     }
 
     public static class Dec extends ConvertAction {
         public Dec() {
-            super(NumeralSystem.DEC);
+            super(ConvertTypes.DEC);
         }
     }
 
     public static class Hex extends ConvertAction {
         public Hex() {
-            super(NumeralSystem.HEX);
+            super(ConvertTypes.HEX);
         }
     }
 
     public static class Oct extends ConvertAction {
         public Oct() {
-            super(NumeralSystem.OCT);
+            super(ConvertTypes.OCT);
         }
     }
 
     public static class Bin extends ConvertAction {
         public Bin() {
-            super(NumeralSystem.BIN);
+            super(ConvertTypes.BIN);
+        }
+    }
+
+    public static class DateTime extends ConvertAction {
+        public DateTime() {
+            super(ConvertTypes.DATETIME);
         }
     }
 

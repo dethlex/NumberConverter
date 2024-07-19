@@ -59,7 +59,10 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-
+        <applicationService
+                serviceImplementation="com.dethlex.numberconverter.config.PluginPersistentStateComponent"/>
+        <applicationConfigurable instance="com.dethlex.numberconverter.config.PluginConfigurable" id="NumberConverter"
+                                 displayName="Number Converter"/>
     </extensions>
 
     <actions>
@@ -68,7 +71,7 @@
                 id="NumberConverter.Group"
                 popup="true"
                 text="Convert To..."
-                description="Convert to different numeral system"
+                description="Convert numbers to different systems"
                 icon="/icons/menu_icon.png"
         >
             <action id="NumberConverter.Group.Dec" class="com.dethlex.numberconverter.ConvertActionGroup$Dec"
@@ -86,6 +89,13 @@
             <action id="NumberConverter.Group.Bin" class="com.dethlex.numberconverter.ConvertActionGroup$Bin"
                     text="BIN">
                 <keyboard-shortcut first-keystroke="control alt N" second-keystroke="B" keymap="$default"/>
+            </action>
+
+            <separator/>
+
+            <action id="NumberConverter.Group.Date" class="com.dethlex.numberconverter.ConvertActionGroup$DateTime"
+                    text="DATE">
+                <keyboard-shortcut first-keystroke="control alt N" second-keystroke="T" keymap="$default"/>
             </action>
 
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>

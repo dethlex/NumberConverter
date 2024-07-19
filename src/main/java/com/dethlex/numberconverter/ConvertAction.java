@@ -1,5 +1,8 @@
 package com.dethlex.numberconverter;
 
+import com.dethlex.numberconverter.common.IConverter;
+import com.dethlex.numberconverter.date.ConvertDate;
+import com.dethlex.numberconverter.number.ConvertNumber;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -10,31 +13,39 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.DateTimeException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConvertAction extends AnAction {
 
-    private final NumeralSystem type;
+    private final ConvertTypes type;
 
     private final static String ERR_CC = "can't convert";
+    private final static String ERR_DT = "wrong date format";
 
-    public ConvertAction(NumeralSystem type) {
+    public ConvertAction(ConvertTypes type) {
         super();
         this.type = type;
     }
 
-    public String ConvertNumber(String value) {
-        value = value.strip().replaceAll("_", "");
+    public String ConvertByType(String value) {
+        IConverter converter;
 
-        ConvertNumber number;
         try {
-            number = new ConvertNumber(value);
+            switch (type) {
+                case DATETIME:
+                    converter = new ConvertDate(value); break;
+                default:
+                    converter = new ConvertNumber(value); break;
+            }
         } catch (NumberFormatException e) {
             return ERR_CC;
+        } catch (DateTimeException e) {
+            return ERR_DT;
         }
 
-        return number.toString(type);
+        return converter.toString(type);
     }
 
     private Pair<Integer, String> ConvertAll(@NotNull List<Caret> caretList) {
@@ -42,7 +53,7 @@ public class ConvertAction extends AnAction {
         String value = "";
 
         for (Caret caret : caretList) {
-            value = ConvertNumber(caret.getSelectedText());
+            value = ConvertByType(caret.getSelectedText());
             if (value.equals(ERR_CC)) {
                 return new Pair<>(0, ERR_CC);
             }
@@ -75,7 +86,7 @@ public class ConvertAction extends AnAction {
 
                     int selectionStart = caret.getSelectionStart();
                     int selectionEnd = caret.getSelectionEnd();
-                    CharSequence convertedNumber = ConvertNumber(caret.getSelectedText());
+                    CharSequence convertedNumber = ConvertByType(caret.getSelectedText());
 
                     document.replaceString(selectionStart, selectionEnd, convertedNumber);
 

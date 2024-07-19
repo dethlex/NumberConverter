@@ -1,6 +1,7 @@
 package com.dethlex.numberconverter;
 
-public enum NumeralSystem {
+// ConvertTypes - possible conversion types
+public enum ConvertTypes {
     HEX {
         @Override
         public String toString() {
@@ -25,4 +26,11 @@ public enum NumeralSystem {
             return "DEC";
         }
     },
+    DATETIME {
+        @Override
+        public String toString() {
+            return "DATE";
+        }
+    },
 }
+

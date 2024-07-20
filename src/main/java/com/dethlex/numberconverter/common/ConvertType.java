@@ -1,7 +1,7 @@
-package com.dethlex.numberconverter;
+package com.dethlex.numberconverter.common;
 
 // ConvertTypes - possible conversion types
-public enum ConvertTypes {
+public enum ConvertType {
     HEX {
         @Override
         public String toString() {

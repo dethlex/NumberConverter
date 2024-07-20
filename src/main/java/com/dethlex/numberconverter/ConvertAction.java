@@ -1,5 +1,6 @@
 package com.dethlex.numberconverter;
 
+import com.dethlex.numberconverter.common.ConvertType;
 import com.dethlex.numberconverter.common.IConverter;
 import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 import com.dethlex.numberconverter.date.ConvertDate;
@@ -20,20 +21,20 @@ import java.util.stream.Collectors;
 
 public class ConvertAction extends AnAction {
 
-    private final ConvertTypes type;
+    private final ConvertType type;
 
     private final static String ERR_CC = "can't convert";
     private final static String ERR_DT = "wrong date format";
 
     private final PluginPersistentStateComponent config;
 
-    public ConvertAction(ConvertTypes type) {
+    public ConvertAction(ConvertType type) {
         super();
         this.type = type;
         this.config = PluginPersistentStateComponent.getInstance();
     }
 
-    public String ConvertByType(String value) {
+    public String convertByType(String value) {
         IConverter converter;
 
         try {
@@ -51,15 +52,15 @@ public class ConvertAction extends AnAction {
             return ERR_DT;
         }
 
-        return config.SurroundText(converter.toString(type));
+        return config.surroundText(converter.toString(type));
     }
 
-    private Pair<Integer, String> ConvertAll(@NotNull List<Caret> caretList) {
+    private Pair<Integer, String> convertAll(@NotNull List<Caret> caretList) {
         int count = 0;
         String value = "";
 
         for (Caret caret : caretList) {
-            value = ConvertByType(caret.getSelectedText());
+            value = convertByType(caret.getSelectedText());
             if (value.equals(ERR_CC)) {
                 return new Pair<>(0, ERR_CC);
             }
@@ -69,7 +70,7 @@ public class ConvertAction extends AnAction {
         return new Pair<>(count, value);
     }
 
-    private List<Caret> FilterCaretWithSelection(@NotNull List<Caret> caretList) {
+    private List<Caret> filterCaretWithSelection(@NotNull List<Caret> caretList) {
         return caretList.stream().filter(Caret::hasSelection).collect(Collectors.toList());
     }
 
@@ -85,14 +86,14 @@ public class ConvertAction extends AnAction {
         final Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
         CaretModel caretModel = editor.getCaretModel();
-        List<Caret> caretList = FilterCaretWithSelection(caretModel.getAllCarets());
+        List<Caret> caretList = filterCaretWithSelection(caretModel.getAllCarets());
 
         WriteCommandAction.runWriteCommandAction(project, () ->
                 caretList.forEach(caret -> {
 
                     int selectionStart = caret.getSelectionStart();
                     int selectionEnd = caret.getSelectionEnd();
-                    CharSequence convertedNumber = ConvertByType(caret.getSelectedText());
+                    CharSequence convertedNumber = convertByType(caret.getSelectedText());
 
                     document.replaceString(selectionStart, selectionEnd, convertedNumber);
 
@@ -108,13 +109,13 @@ public class ConvertAction extends AnAction {
         super.update(anActionEvent);
 
         final Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
-        List<Caret> caretList = FilterCaretWithSelection(editor.getCaretModel().getAllCarets());
+        List<Caret> caretList = filterCaretWithSelection(editor.getCaretModel().getAllCarets());
 
         anActionEvent.getPresentation().setEnabledAndVisible(!caretList.isEmpty());
         if (!anActionEvent.getPresentation().isVisible())
             return;
 
-        Pair<Integer, String> p = ConvertAll(caretList);
+        Pair<Integer, String> p = convertAll(caretList);
         String text = type.toString();
         if (p.first > 1) {
             text += " (" + p.first + ")";

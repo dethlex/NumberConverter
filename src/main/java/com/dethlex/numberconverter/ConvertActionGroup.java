@@ -1,5 +1,6 @@
 package com.dethlex.numberconverter;
 
+import com.dethlex.numberconverter.common.ConvertType;
 import com.intellij.openapi.actionSystem.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,31 +21,31 @@ public class ConvertActionGroup extends ActionGroup {
 
     public static class Dec extends ConvertAction {
         public Dec() {
-            super(ConvertTypes.DEC);
+            super(ConvertType.DEC);
         }
     }
 
     public static class Hex extends ConvertAction {
         public Hex() {
-            super(ConvertTypes.HEX);
+            super(ConvertType.HEX);
         }
     }
 
     public static class Oct extends ConvertAction {
         public Oct() {
-            super(ConvertTypes.OCT);
+            super(ConvertType.OCT);
         }
     }
 
     public static class Bin extends ConvertAction {
         public Bin() {
-            super(ConvertTypes.BIN);
+            super(ConvertType.BIN);
         }
     }
 
     public static class DateTime extends ConvertAction {
         public DateTime() {
-            super(ConvertTypes.DATETIME);
+            super(ConvertType.DATETIME);
         }
     }
 

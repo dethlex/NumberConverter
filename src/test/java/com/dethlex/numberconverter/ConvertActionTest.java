@@ -1,5 +1,6 @@
 package com.dethlex.numberconverter;
 
+import com.dethlex.numberconverter.common.ConvertType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.Test;
 import org.junit.Assert;
@@ -17,10 +18,10 @@ public class ConvertActionTest {
         }
     }
 
-    private void assertTestData(ConvertTypes system, TestData[] tests) {
+    private void assertTestData(ConvertType system, TestData[] tests) {
         ConvertAction action = new ConvertAction(system);
         for (TestData test : tests) {
-            Assert.assertEquals(test.Error, test.Expected, action.ConvertByType(test.Value));
+            Assert.assertEquals(test.Error, test.Expected, action.convertByType(test.Value));
         }
     }
 
@@ -48,7 +49,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert DEC"),
         };
 
-        assertTestData(ConvertTypes.DEC, tests);
+        assertTestData(ConvertType.DEC, tests);
     }
 
     @Test
@@ -75,7 +76,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert HEX"),
         };
 
-        assertTestData(ConvertTypes.HEX, tests);
+        assertTestData(ConvertType.HEX, tests);
     }
 
     @Test
@@ -102,7 +103,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert OCT"),
         };
 
-        assertTestData(ConvertTypes.OCT, tests);
+        assertTestData(ConvertType.OCT, tests);
     }
 
     @Test
@@ -129,7 +130,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert BIN"),
         };
 
-        assertTestData(ConvertTypes.BIN, tests);
+        assertTestData(ConvertType.BIN, tests);
     }
 
     @Test
@@ -140,6 +141,6 @@ public class ConvertActionTest {
                 new TestData("1721073026000", "2024-07-15 22:50:26", "UNIX MILLI != DATE"),
         };
 
-        assertTestData(ConvertTypes.DATETIME, tests);
+        assertTestData(ConvertType.DATETIME, tests);
     }
 }

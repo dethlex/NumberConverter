@@ -44,7 +44,7 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
         return surroundRight;
     }
 
-    public String SurroundText(String text) {
+    public String surroundText(String text) {
         if (!surroundEnable) {
             return text;
         }

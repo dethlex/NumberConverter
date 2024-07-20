@@ -12,6 +12,9 @@ import org.jetbrains.annotations.Nullable;
 public class PluginPersistentStateComponent implements PersistentStateComponent<PluginPersistentStateComponent> {
 
     private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+    private boolean surroundEnable = false;
+    private String surroundLeft = "";
+    private String surroundRight = "";
 
     public String getDateTimeFormat() {
         return dateTimeFormat;
@@ -21,13 +24,38 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
         this.dateTimeFormat = dateTimeFormat;
     }
 
+    public boolean isSurroundEnable() {
+        return surroundEnable;
+    }
+
+    public void setSurroundEnable(boolean surroundEnable) {
+        this.surroundEnable = surroundEnable;
+    }
+
+    public String getSurroundLeft() {
+        return surroundLeft;
+    }
+
+    public void setSurroundLeft(String surroundLeft) {
+        this.surroundLeft = surroundLeft;
+    }
+
+    public String getSurroundRight() {
+        return surroundRight;
+    }
+
+    public String SurroundText(String text) {
+        if (!surroundEnable) {
+            return text;
+        }
+        return surroundLeft + text + surroundRight;
+    }
+
+    public void setSurroundRight(String surroundRight) {
+        this.surroundRight = surroundRight;
+    }
+
     public static PluginPersistentStateComponent getInstance() {
-//        if (ApplicationManager.getApplication() == null) {
-//            if (unitTestComponent == null) {
-//                unitTestComponent = new PluginPersistentStateComponent();
-//            }
-//            return unitTestComponent;
-//        }
         return ApplicationManager.getApplication().getService(PluginPersistentStateComponent.class);
     }
 

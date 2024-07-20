@@ -1,6 +1,7 @@
 package com.dethlex.numberconverter;
 
 import com.dethlex.numberconverter.common.IConverter;
+import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 import com.dethlex.numberconverter.date.ConvertDate;
 import com.dethlex.numberconverter.number.ConvertNumber;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
@@ -24,9 +25,12 @@ public class ConvertAction extends AnAction {
     private final static String ERR_CC = "can't convert";
     private final static String ERR_DT = "wrong date format";
 
+    private final PluginPersistentStateComponent config;
+
     public ConvertAction(ConvertTypes type) {
         super();
         this.type = type;
+        this.config = PluginPersistentStateComponent.getInstance();
     }
 
     public String ConvertByType(String value) {
@@ -35,9 +39,11 @@ public class ConvertAction extends AnAction {
         try {
             switch (type) {
                 case DATETIME:
-                    converter = new ConvertDate(value); break;
+                    converter = new ConvertDate(value);
+                    break;
                 default:
-                    converter = new ConvertNumber(value); break;
+                    converter = new ConvertNumber(value);
+                    break;
             }
         } catch (NumberFormatException e) {
             return ERR_CC;
@@ -45,7 +51,7 @@ public class ConvertAction extends AnAction {
             return ERR_DT;
         }
 
-        return converter.toString(type);
+        return config.SurroundText(converter.toString(type));
     }
 
     private Pair<Integer, String> ConvertAll(@NotNull List<Caret> caretList) {

@@ -137,8 +137,13 @@ public class ConvertActionTest {
     @DisplayName("To DATE")
     public void testToDate() {
         var tests = new TestData[]{
-                new TestData("1721073026", "2024-07-15 22:50:26", "UNIX SEC != DATE"),
-                new TestData("1721073026000", "2024-07-15 22:50:26", "UNIX MILLI != DATE"),
+                new TestData("1136207045", "2006-01-02 15:04:05", "UNIX SEC != DATE"),
+                new TestData("1136207045000", "2006-01-02 15:04:05", "UNIX MILLI != DATE"),
+                new TestData("1136207045000", "2006-01-02 15:04:05", "UNIX MILLI != DATE"),
+                new TestData("0x43B924C5", "2006-01-02 15:04:05", "HEX != DATE"),
+                new TestData("0b1000011101110010010010011000101", "2006-01-02 15:04:05", "BIN != DATE"),
+                new TestData("010356222305", "2006-01-02 15:04:05", "OCT != DATE"),
+                new TestData("2006-01-02 15:04:05", "2006-01-02 15:04:05", "DATE != DATE"),
         };
 
         assertTestData(ConvertType.DATETIME, tests);

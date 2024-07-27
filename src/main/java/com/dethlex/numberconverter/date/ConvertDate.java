@@ -8,7 +8,10 @@ import com.dethlex.numberconverter.number.ConvertNumber;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.TimeZone;
 
 public final class ConvertDate extends IConverter {
     private final Date date;
@@ -37,8 +40,12 @@ public final class ConvertDate extends IConverter {
     }
 
     public String toString(ConvertType system) {
-        String pattern = PluginPersistentStateComponent.getInstance().getDateTimeFormat();
+        var state = PluginPersistentStateComponent.getInstance();
+        String pattern = state.getDateTimeFormat();
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        if (state.isDateTimeUTC()) {
+            formatter.setTimeZone(TimeZone.getTimeZone(ZoneId.from(ZoneOffset.UTC)));
+        }
         return formatter.format(date);
     }
 }

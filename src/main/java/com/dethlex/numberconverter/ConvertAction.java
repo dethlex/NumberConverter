@@ -24,7 +24,6 @@ public class ConvertAction extends AnAction {
     private final ConvertType type;
 
     private final static String ERR_CC = "can't convert";
-    private final static String ERR_DT = "wrong date format";
 
     private final PluginPersistentStateComponent config;
 
@@ -46,10 +45,8 @@ public class ConvertAction extends AnAction {
                     converter = new ConvertNumber(value);
                     break;
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return ERR_CC;
-        } catch (DateTimeException e) {
-            return ERR_DT;
         }
 
         return config.surroundText(converter.toString(type));

@@ -10,11 +10,13 @@ import org.jetbrains.annotations.Nullable;
 
 @State(name = "NumberConverterState", storages = {@Storage("numberConverter.xml")})
 public class PluginPersistentStateComponent implements PersistentStateComponent<PluginPersistentStateComponent> {
+    private static PluginPersistentStateComponent unitTestComponent;
 
     private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private boolean surroundEnable = false;
     private String surroundLeft = "";
     private String surroundRight = "";
+    private boolean dateTimeUTC = false;
 
     public String getDateTimeFormat() {
         return dateTimeFormat;
@@ -22,6 +24,14 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     public void setDateTimeFormat(String dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
+    }
+
+    public boolean isDateTimeUTC() {
+        return dateTimeUTC;
+    }
+
+    public void setDateTimeUTC(boolean dateTimeUTC) {
+        this.dateTimeUTC = dateTimeUTC;
     }
 
     public boolean isSurroundEnable() {
@@ -56,6 +66,13 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
     }
 
     public static PluginPersistentStateComponent getInstance() {
+        if (ApplicationManager.getApplication() == null) {
+            if (unitTestComponent == null) {
+                unitTestComponent = new PluginPersistentStateComponent();
+            }
+            return unitTestComponent;
+        }
+
         return ApplicationManager.getApplication().getService(PluginPersistentStateComponent.class);
     }
 

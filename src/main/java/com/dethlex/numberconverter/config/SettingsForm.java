@@ -9,7 +9,6 @@ import javax.swing.event.DocumentEvent;
 import java.awt.Desktop;
 import java.net.URI;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class SettingsForm {
     private JTextField dateTimeTextField;
@@ -19,6 +18,7 @@ public class SettingsForm {
     private JTextField surroundLeftTextField;
     private JTextField surroundRightTextField;
     private JLabel dateTimeTestLabel;
+    private JCheckBox dateTimeUTCCheckBox;
 
     private boolean canSave = false;
 
@@ -38,7 +38,13 @@ public class SettingsForm {
                 canSave = true;
                 try {
                     SimpleDateFormat formatter = new SimpleDateFormat(dateTimeTextField.getText());
-                    dateTimeTestLabel.setText(formatter.format(new Date()));
+                    var date = formatter.parse("2006-01-02 15:04:05");
+                    if (dateTimeUTCCheckBox.isSelected()) {
+                        formatter.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                    }
+                    dateTimeTestLabel.setText(formatter.format(date) + " " +
+                            (dateTimeUTCCheckBox.isSelected() ? "(UTC)" : "(Local)")
+                    );
                 } catch (Exception ex) {
                     dateTimeTestLabel.setText("Invalid format");
                     canSave = false;
@@ -50,6 +56,10 @@ public class SettingsForm {
             surroundLeftTextField.setEnabled(surroundEnableCheckBox.isSelected());
             surroundRightTextField.setEnabled(surroundEnableCheckBox.isSelected());
         });
+
+        dateTimeUTCCheckBox.addChangeListener(e -> {
+            dateTimeTextField.setText(dateTimeTextField.getText());
+        });
     }
 
     public JPanel getRoot() {
@@ -58,6 +68,7 @@ public class SettingsForm {
 
     public void getData(PluginPersistentStateComponent data) {
         data.setDateTimeFormat(dateTimeTextField.getText());
+        data.setDateTimeUTC(dateTimeUTCCheckBox.isSelected());
         data.setSurroundEnable(surroundEnableCheckBox.isSelected());
         data.setSurroundLeft(surroundLeftTextField.getText());
         data.setSurroundRight(surroundRightTextField.getText());
@@ -65,6 +76,7 @@ public class SettingsForm {
 
     public void setData(PluginPersistentStateComponent data) {
         dateTimeTextField.setText(data.getDateTimeFormat());
+        dateTimeUTCCheckBox.setSelected(data.isDateTimeUTC());
         surroundEnableCheckBox.setSelected(data.isSurroundEnable());
         surroundLeftTextField.setText(data.getSurroundLeft());
         surroundRightTextField.setText(data.getSurroundRight());
@@ -76,6 +88,7 @@ public class SettingsForm {
         }
 
         return !dateTimeTextField.getText().equals(data.getDateTimeFormat()) ||
+                dateTimeUTCCheckBox.isSelected() != data.isDateTimeUTC() ||
                 surroundEnableCheckBox.isSelected() != data.isSurroundEnable() ||
                 !surroundLeftTextField.getText().equals(data.getSurroundLeft()) ||
                 !surroundRightTextField.getText().equals(data.getSurroundRight());

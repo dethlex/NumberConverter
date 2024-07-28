@@ -1,5 +1,6 @@
 package com.dethlex.numberconverter;
 
+import com.dethlex.numberconverter.common.ConvertType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.Test;
 import org.junit.Assert;
@@ -17,10 +18,10 @@ public class ConvertActionTest {
         }
     }
 
-    private void assertTestData(NumeralSystem system, TestData[] tests) {
+    private void assertTestData(ConvertType system, TestData[] tests) {
         ConvertAction action = new ConvertAction(system);
         for (TestData test : tests) {
-            Assert.assertEquals(test.Error, test.Expected, action.ConvertNumber(test.Value));
+            Assert.assertEquals(test.Error, test.Expected, action.convertByType(test.Value));
         }
     }
 
@@ -48,7 +49,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert DEC"),
         };
 
-        assertTestData(NumeralSystem.DEC, tests);
+        assertTestData(ConvertType.DEC, tests);
     }
 
     @Test
@@ -75,7 +76,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert HEX"),
         };
 
-        assertTestData(NumeralSystem.HEX, tests);
+        assertTestData(ConvertType.HEX, tests);
     }
 
     @Test
@@ -102,7 +103,7 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert OCT"),
         };
 
-        assertTestData(NumeralSystem.OCT, tests);
+        assertTestData(ConvertType.OCT, tests);
     }
 
     @Test
@@ -129,6 +130,22 @@ public class ConvertActionTest {
                 new TestData("qwerty", "can't convert", "Can't convert BIN"),
         };
 
-        assertTestData(NumeralSystem.BIN, tests);
+        assertTestData(ConvertType.BIN, tests);
+    }
+
+    @Test
+    @DisplayName("To DATE")
+    public void testToDate() {
+        var tests = new TestData[]{
+                new TestData("1136207045", "2006-01-02 15:04:05", "UNIX SEC != DATE"),
+                new TestData("1136207045000", "2006-01-02 15:04:05", "UNIX MILLI != DATE"),
+                new TestData("1136207045000", "2006-01-02 15:04:05", "UNIX MILLI != DATE"),
+                new TestData("0x43B924C5", "2006-01-02 15:04:05", "HEX != DATE"),
+                new TestData("0b1000011101110010010010011000101", "2006-01-02 15:04:05", "BIN != DATE"),
+                new TestData("010356222305", "2006-01-02 15:04:05", "OCT != DATE"),
+                new TestData("2006-01-02 15:04:05", "2006-01-02 15:04:05", "DATE != DATE"),
+        };
+
+        assertTestData(ConvertType.DATETIME, tests);
     }
 }

@@ -1,5 +1,10 @@
 package com.dethlex.numberconverter;
 
+import com.dethlex.numberconverter.common.ConvertType;
+import com.dethlex.numberconverter.common.IConverter;
+import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
+import com.dethlex.numberconverter.date.ConvertDate;
+import com.dethlex.numberconverter.number.ConvertNumber;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -9,40 +14,48 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConvertAction extends AnAction {
 
-    private final NumeralSystem type;
+    private final ConvertType type;
 
     private final static String ERR_CC = "can't convert";
 
-    public ConvertAction(NumeralSystem type) {
+    private final PluginPersistentStateComponent config;
+
+    public ConvertAction(ConvertType type) {
         super();
         this.type = type;
+        this.config = PluginPersistentStateComponent.getInstance();
     }
 
-    public String ConvertNumber(String value) {
-        value = value.strip().replaceAll("_", "");
+    public String convertByType(String value) {
+        IConverter converter;
 
-        ConvertNumber number;
         try {
-            number = new ConvertNumber(value);
-        } catch (NumberFormatException e) {
+            switch (type) {
+                case DATETIME:
+                    converter = new ConvertDate(value);
+                    break;
+                default:
+                    converter = new ConvertNumber(value);
+                    break;
+            }
+        } catch (Exception e) {
             return ERR_CC;
         }
 
-        return number.toString(type);
+        return config.surroundText(converter.toString(type));
     }
 
-    private Pair<Integer, String> ConvertAll(@NotNull List<Caret> caretList) {
+    private Pair<Integer, String> convertAll(@NotNull List<Caret> caretList) {
         int count = 0;
         String value = "";
 
         for (Caret caret : caretList) {
-            value = ConvertNumber(caret.getSelectedText());
+            value = convertByType(caret.getSelectedText());
             if (value.equals(ERR_CC)) {
                 return new Pair<>(0, ERR_CC);
             }
@@ -52,7 +65,7 @@ public class ConvertAction extends AnAction {
         return new Pair<>(count, value);
     }
 
-    private List<Caret> FilterCaretWithSelection(@NotNull List<Caret> caretList) {
+    private List<Caret> filterCaretWithSelection(@NotNull List<Caret> caretList) {
         return caretList.stream().filter(Caret::hasSelection).collect(Collectors.toList());
     }
 
@@ -68,14 +81,14 @@ public class ConvertAction extends AnAction {
         final Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
         CaretModel caretModel = editor.getCaretModel();
-        List<Caret> caretList = FilterCaretWithSelection(caretModel.getAllCarets());
+        List<Caret> caretList = filterCaretWithSelection(caretModel.getAllCarets());
 
         WriteCommandAction.runWriteCommandAction(project, () ->
                 caretList.forEach(caret -> {
 
                     int selectionStart = caret.getSelectionStart();
                     int selectionEnd = caret.getSelectionEnd();
-                    CharSequence convertedNumber = ConvertNumber(caret.getSelectedText());
+                    CharSequence convertedNumber = convertByType(caret.getSelectedText());
 
                     document.replaceString(selectionStart, selectionEnd, convertedNumber);
 
@@ -91,13 +104,13 @@ public class ConvertAction extends AnAction {
         super.update(anActionEvent);
 
         final Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
-        List<Caret> caretList = FilterCaretWithSelection(editor.getCaretModel().getAllCarets());
+        List<Caret> caretList = filterCaretWithSelection(editor.getCaretModel().getAllCarets());
 
         anActionEvent.getPresentation().setEnabledAndVisible(!caretList.isEmpty());
         if (!anActionEvent.getPresentation().isVisible())
             return;
 
-        Pair<Integer, String> p = ConvertAll(caretList);
+        Pair<Integer, String> p = convertAll(caretList);
         String text = type.toString();
         if (p.first > 1) {
             text += " (" + p.first + ")";

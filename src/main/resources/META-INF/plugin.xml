@@ -39,7 +39,7 @@
 
     <change-notes><![CDATA[
 		<ul>
-		    <li>2.1.0 - settings, date conversion</li>
+		    <li>2.1.0 - settings, date/time conversion</li>
 		    <li>2.0.0 - gradle build</li>
 			<li>1.5.0 - negative conversion</li>
 			<li>1.4.4 - fix errors</li>

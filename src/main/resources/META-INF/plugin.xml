@@ -14,7 +14,7 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-		The plugin to convert numbers from one numeral system to another in any JetBrains IDE.
+		The plugin to convert numbers from one system to another in any JetBrains IDE.
 		For floating point numbers, the fractional part will be discarded.
 		<br>
 		<h3>Features:</h3>
@@ -24,19 +24,22 @@
 			<li>negative conversion (bit shifting)</li>
 			<li>multi carets</li>
 			<li>shortcuts</li>
+			<li>settings - date format, surrounding, etc.</li>
 		</ul>
 		<br>
-		<h3>Current supported numeral systems:</h3>
+		<h3>Current supported systems:</h3>
 		<ul>
 			<li>DEC - Decimal</li>
 			<li>HEX - Hexadecimal</li>
 			<li>OCT - Octal</li>
 			<li>BIN - Binary</li>
+			<li>DATE - Date/Time</li>
 		</ul>
 		]]></description>
 
     <change-notes><![CDATA[
 		<ul>
+		    <li>2.1.0 - settings, date conversion</li>
 		    <li>2.0.0 - gradle build</li>
 			<li>1.5.0 - negative conversion</li>
 			<li>1.4.4 - fix errors</li>

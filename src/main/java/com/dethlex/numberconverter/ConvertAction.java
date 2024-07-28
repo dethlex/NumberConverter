@@ -14,8 +14,6 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
-
-import java.time.DateTimeException;
 import java.util.List;
 import java.util.stream.Collectors;
 

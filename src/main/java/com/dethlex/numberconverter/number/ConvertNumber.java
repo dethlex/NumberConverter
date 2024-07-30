@@ -20,9 +20,13 @@ public final class ConvertNumber extends IConverter {
     private BigInteger shiftForType(ConvertType system) {
         var integer = this.integer;
         if (negative && system != ConvertType.DEC) {
-            var p2 = Integer.highestOneBit(integer.bitCount() - 1) * 2;
-            p2 = Math.max(p2, 16);
-            integer = integer.add(BigInteger.ONE.shiftLeft(p2 * 2));
+            var bit = Integer.highestOneBit(integer.bitCount() - 1) * 2;
+            var multiplier = 2;
+            bit = Math.max(bit, 16);
+            if (bit <= 32) {
+                multiplier = 1;
+            }
+            integer = integer.add(BigInteger.ONE.shiftLeft(bit * multiplier));
         }
         return integer;
     }

@@ -52,17 +52,22 @@ public class ConvertAction extends AnAction {
 
     private Pair<Integer, String> convertAll(@NotNull List<Caret> caretList) {
         int count = 0;
-        String value = "";
+        String firstValue = "";
 
         for (Caret caret : caretList) {
-            value = convertByType(caret.getSelectedText());
+            String value = convertByType(caret.getSelectedText());
             if (value.equals(ERR_CC)) {
                 return new Pair<>(0, ERR_CC);
             }
+
+            if (count == 0) {
+                firstValue = value;
+            }
+
             count++;
         }
 
-        return new Pair<>(count, value);
+        return new Pair<>(count, firstValue);
     }
 
     private List<Caret> filterCaretWithSelection(@NotNull List<Caret> caretList) {
@@ -113,7 +118,7 @@ public class ConvertAction extends AnAction {
         Pair<Integer, String> p = convertAll(caretList);
         String text = type.toString();
         if (p.first > 1) {
-            text += " (" + p.first + ")";
+            text += ": " + p.second + " (+" + (p.first - 1) + ")";
         } else {
             text += ": " + p.second;
         }

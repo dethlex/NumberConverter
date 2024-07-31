@@ -15,3 +15,11 @@
 - Date and time conversion
 
 [2.1.0]: https://github.com/dethlex/NumberConverter/tree/2.1.0
+
+## [2.1.1]
+
+### Changed
+- Settings for upper/lower case string output
+- Fix [issue #9](https://github.com/dethlex/NumberConverter/issues/9) with negative numbers 
+
+[2.1.1]: https://github.com/dethlex/NumberConverter/tree/2.1.1

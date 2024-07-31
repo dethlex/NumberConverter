@@ -19,6 +19,8 @@ public class SettingsForm {
     private JTextField surroundRightTextField;
     private JLabel dateTimeTestLabel;
     private JCheckBox dateTimeUTCCheckBox;
+    private JRadioButton lowerCaseRadioButton;
+    private JRadioButton upperCaseRadioButton;
 
     private boolean canSave = false;
 
@@ -72,6 +74,7 @@ public class SettingsForm {
         data.setSurroundEnable(surroundEnableCheckBox.isSelected());
         data.setSurroundLeft(surroundLeftTextField.getText());
         data.setSurroundRight(surroundRightTextField.getText());
+        data.setUpperCase(upperCaseRadioButton.isSelected());
     }
 
     public void setData(PluginPersistentStateComponent data) {
@@ -80,6 +83,8 @@ public class SettingsForm {
         surroundEnableCheckBox.setSelected(data.isSurroundEnable());
         surroundLeftTextField.setText(data.getSurroundLeft());
         surroundRightTextField.setText(data.getSurroundRight());
+        lowerCaseRadioButton.setSelected(!data.isUpperCase());
+        upperCaseRadioButton.setSelected(data.isUpperCase());
     }
 
     public boolean isModified(PluginPersistentStateComponent data) {
@@ -91,6 +96,7 @@ public class SettingsForm {
                 dateTimeUTCCheckBox.isSelected() != data.isDateTimeUTC() ||
                 surroundEnableCheckBox.isSelected() != data.isSurroundEnable() ||
                 !surroundLeftTextField.getText().equals(data.getSurroundLeft()) ||
-                !surroundRightTextField.getText().equals(data.getSurroundRight());
+                !surroundRightTextField.getText().equals(data.getSurroundRight()) ||
+                upperCaseRadioButton.isSelected() != data.isUpperCase();
     }
 }

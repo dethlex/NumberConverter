@@ -3,6 +3,7 @@ package com.dethlex.numberconverter.number;
 import com.dethlex.numberconverter.common.ConvertType;
 import com.dethlex.numberconverter.common.ConvertTypeParser;
 import com.dethlex.numberconverter.common.IConverter;
+import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 
 import java.math.BigInteger;
 
@@ -32,7 +33,10 @@ public final class ConvertNumber extends IConverter {
     }
 
     public String toString(ConvertType system) {
+        var state = PluginPersistentStateComponent.getInstance();
         var integer = shiftForType(system);
-        return ConvertTypeParser.startWith(system) + integer.toString(ConvertTypeParser.radix(system)).toUpperCase();
+        var number = integer.toString(ConvertTypeParser.radix(system));
+        number =  state.isUpperCase() ? number.toUpperCase() : number.toLowerCase();
+        return ConvertTypeParser.startWith(system) + number;
     }
 }

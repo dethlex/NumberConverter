@@ -17,6 +17,7 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
     private String surroundLeft = "";
     private String surroundRight = "";
     private boolean dateTimeUTC = false;
+    private boolean isUpperCase = true;
 
     public String getDateTimeFormat() {
         return dateTimeFormat;
@@ -63,6 +64,14 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     public void setSurroundRight(String surroundRight) {
         this.surroundRight = surroundRight;
+    }
+
+    public boolean isUpperCase() {
+        return isUpperCase;
+    }
+
+    public void setUpperCase(boolean isUpperCase) {
+        this.isUpperCase = isUpperCase;
     }
 
     public static PluginPersistentStateComponent getInstance() {

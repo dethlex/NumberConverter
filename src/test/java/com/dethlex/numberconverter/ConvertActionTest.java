@@ -63,10 +63,10 @@ public class ConvertActionTest {
 
                 new TestData("1e2", "0x64", "Engineering DEC != HEX"),
 
-                new TestData("-100", "0xFFFFFF9C", "Negative DEC != HEX"),
-                new TestData("-0x64", "0xFFFFFF9C", "Negative HEX != HEX"),
-                new TestData("-0144", "0xFFFFFF9C", "Negative OCT != HEX"),
-                new TestData("-0b1100100", "0xFFFFFF9C", "Negative BIN != HEX"),
+                new TestData("-100", "0xFF9C", "Negative DEC != HEX"),
+                new TestData("-0x64", "0xFF9C", "Negative HEX != HEX"),
+                new TestData("-0144", "0xFF9C", "Negative OCT != HEX"),
+                new TestData("-0b1100100", "0xFF9C", "Negative BIN != HEX"),
 
                 new TestData("92233720368547758070", "0x4FFFFFFFFFFFFFFF6", "BIG DEC != BIG HEX"),
                 new TestData("0x4FFFFFFFFFFFFFFF6", "0x4FFFFFFFFFFFFFFF6", "BIG HEX != BIG HEX"),
@@ -90,10 +90,10 @@ public class ConvertActionTest {
 
                 new TestData("1e2", "0144", "Engineering DEC != OCT"),
 
-                new TestData("-100", "037777777634", "Negative DEC != OCT"),
-                new TestData("-0x64", "037777777634", "Negative HEX != OCT"),
-                new TestData("-0144", "037777777634", "Negative OCT != OCT"),
-                new TestData("-0b1100100", "037777777634", "Negative BIN != OCT"),
+                new TestData("-100", "0177634", "Negative DEC != OCT"),
+                new TestData("-0x64", "0177634", "Negative HEX != OCT"),
+                new TestData("-0144", "0177634", "Negative OCT != OCT"),
+                new TestData("-0b1100100", "0177634", "Negative BIN != OCT"),
 
                 new TestData("92233720368547758070", "011777777777777777777766", "BIG DEC != BIG OCT"),
                 new TestData("0x4FFFFFFFFFFFFFFF6", "011777777777777777777766", "BIG HEX != BIG OCT"),
@@ -117,10 +117,10 @@ public class ConvertActionTest {
 
                 new TestData("1e2", "0b1100100", "Engineering DEC  != BIN"),
 
-                new TestData("-100", "0b11111111111111111111111110011100", "Negative DEC != BIN"),
-                new TestData("-0x64", "0b11111111111111111111111110011100", "Negative HEX != BIN"),
-                new TestData("-0144", "0b11111111111111111111111110011100", "Negative OCT != BIN"),
-                new TestData("-0b1100100", "0b11111111111111111111111110011100", "Negative BIN != BIN"),
+                new TestData("-100", "0b1111111110011100", "Negative DEC != BIN"),
+                new TestData("-0x64", "0b1111111110011100", "Negative HEX != BIN"),
+                new TestData("-0144", "0b1111111110011100", "Negative OCT != BIN"),
+                new TestData("-0b1100100", "0b1111111110011100", "Negative BIN != BIN"),
 
                 new TestData("92233720368547758070", "0b1001111111111111111111111111111111111111111111111111111111111110110", "BIG DEC != BIG BIN"),
                 new TestData("0x4FFFFFFFFFFFFFFF6", "0b1001111111111111111111111111111111111111111111111111111111111110110", "BIG HEX != BIG BIN"),

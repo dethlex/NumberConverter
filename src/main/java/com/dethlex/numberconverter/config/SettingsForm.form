@@ -112,7 +112,7 @@
             </constraints>
             <properties>
               <horizontalAlignment value="4"/>
-              <icon value="icons/question-mark.png"/>
+              <icon value="icons/question_mark.png"/>
               <text value=""/>
             </properties>
           </component>

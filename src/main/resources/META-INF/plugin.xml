@@ -76,7 +76,7 @@
                 popup="true"
                 text="Convert To..."
                 description="Convert numbers to different systems"
-                icon="/icons/menu_icon.png"
+                icon="/icons/menu_icon.svg"
         >
             <action id="NumberConverter.Group.Dec" class="com.dethlex.numberconverter.ConvertActionGroup$Dec"
                     text="DEC">

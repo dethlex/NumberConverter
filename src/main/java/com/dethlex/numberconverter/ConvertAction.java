@@ -35,14 +35,10 @@ public class ConvertAction extends AnAction {
         IConverter converter;
 
         try {
-            switch (type) {
-                case DATETIME:
-                    converter = new ConvertDate(value);
-                    break;
-                default:
-                    converter = new ConvertNumber(value);
-                    break;
-            }
+            converter = switch (type) {
+                case DATETIME -> new ConvertDate(value);
+                default -> new ConvertNumber(value);
+            };
         } catch (Exception e) {
             return ERR_CC;
         }
@@ -81,9 +77,12 @@ public class ConvertAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        final Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
+        final Editor editor = anActionEvent.getData(CommonDataKeys.EDITOR);
+        final Project project = anActionEvent.getProject();
+        if (editor == null || project == null) {
+            return;
+        }
         final Document document = editor.getDocument();
-        final Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
         CaretModel caretModel = editor.getCaretModel();
         List<Caret> caretList = filterCaretWithSelection(caretModel.getAllCarets());
@@ -108,7 +107,11 @@ public class ConvertAction extends AnAction {
     public void update(@NotNull AnActionEvent anActionEvent) {
         super.update(anActionEvent);
 
-        final Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
+        final Editor editor = anActionEvent.getData(CommonDataKeys.EDITOR);
+        if (editor == null) {
+            anActionEvent.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
         List<Caret> caretList = filterCaretWithSelection(editor.getCaretModel().getAllCarets());
 
         anActionEvent.getPresentation().setEnabledAndVisible(!caretList.isEmpty());

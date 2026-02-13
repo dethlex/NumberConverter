@@ -10,7 +10,7 @@ For floating point numbers, the fractional part will be discarded.
 - negative conversion (bit shifting)
 - multi carets
 - shortcuts
-- settings - date format, surrounding, etc.
+- settings – date format, surrounding, etc.
 
 ### Current supported systems:
 
@@ -19,3 +19,19 @@ For floating point numbers, the fractional part will be discarded.
 - OCT - Octal
 - BIN - Binary
 - DATE - Date/Time
+
+### Build
+
+Prerequisites:
+
+- JDK 17
+
+Build plugin ZIP:
+
+```bash
+./gradlew buildPlugin
+```
+
+Build artifact:
+
+- `build/distributions/NumberConverter-<version>.zip`

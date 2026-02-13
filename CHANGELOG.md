@@ -16,6 +16,14 @@
 
 [2.1.0]: https://github.com/dethlex/NumberConverter/tree/2.1.0
 
+## [2.1.2]
+
+### Changed
+- Migrated to IntelliJ Platform Gradle Plugin 2.x
+- Updated Gradle to 8.13
+
+[2.1.2]: https://github.com/dethlex/NumberConverter/tree/2.1.2
+
 ## [2.1.1]
 
 ### Changed

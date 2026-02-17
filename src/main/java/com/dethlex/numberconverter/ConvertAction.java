@@ -128,7 +128,8 @@ public class ConvertAction extends AnAction {
             text += ": " + p.second;
         }
 
-        anActionEvent.getPresentation().setText(text);
-        anActionEvent.getPresentation().setEnabled(p.first > 0);
+        var presentation = anActionEvent.getPresentation();
+        presentation.setText(text, false);
+        presentation.setEnabled(p.first > 0);
     }
 }

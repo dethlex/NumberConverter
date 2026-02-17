@@ -15,12 +15,15 @@ public final class FormatNumber extends IConverter {
         var state = PluginPersistentStateComponent.getInstance();
         String delimiter = state.getFormatDelimiter();
 
-        // Strip common formatting characters plus the configured delimiter
+        // Strip configured delimiter and common formatting characters
         value = value.strip();
-        if (!delimiter.isEmpty()) {
+
+        // Strip all common delimiters: underscore, comma, space, and the configured delimiter
+        value = value.replaceAll("[_,\\s]", "");
+        if (!delimiter.isEmpty() && !delimiter.matches("[_,\\s]")) {
+            // If delimiter is something else (like "." or custom), strip it too
             value = value.replace(delimiter, "");
         }
-        value = value.replaceAll("[_,\\s]", "");
 
         this.negative = value.startsWith("-");
         this.integer = ConvertTypeParser.parse(value);
@@ -84,7 +87,7 @@ public final class FormatNumber extends IConverter {
             if (sb.length() > 0) {
                 sb.append(delimiter);
             }
-            sb.append(digits, i, i + groupSize);
+            sb.append(digits, i, Math.min(i + groupSize, length));
         }
 
         return sb.toString();

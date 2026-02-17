@@ -6,7 +6,7 @@ fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
+    id("org.jetbrains.kotlin.jvm") version "1.9.25"
     id("org.jetbrains.intellij.platform") version "2.11.0"
     id("org.jetbrains.changelog") version "2.1.2"
 }
@@ -97,5 +97,9 @@ tasks {
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
+    }
+
+    runIde {
+        jvmArgs("-Dkotlinx.coroutines.debug=off")
     }
 }

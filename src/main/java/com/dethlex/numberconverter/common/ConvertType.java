@@ -32,5 +32,11 @@ public enum ConvertType {
             return "DATE";
         }
     },
+    FORMAT {
+        @Override
+        public String toString() {
+            return "FORMAT";
+        }
+    },
 }
 

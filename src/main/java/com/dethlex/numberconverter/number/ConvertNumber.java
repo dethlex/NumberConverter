@@ -12,7 +12,16 @@ public final class ConvertNumber extends IConverter {
     private final BigInteger integer;
 
     public ConvertNumber(String value) {
-        value = value.strip().replaceAll("_", "");
+        var state = PluginPersistentStateComponent.getInstance();
+        String delimiter = state.getFormatDelimiter();
+
+        // Strip common formatting characters plus the configured delimiter
+        value = value.strip();
+        if (!delimiter.isEmpty()) {
+            value = value.replace(delimiter, "");
+        }
+        value = value.replaceAll("[_,\\s]", "");
+
         this.negative = value.startsWith("-");
         this.integer = ConvertTypeParser.parse(value);
     }

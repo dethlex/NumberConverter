@@ -16,6 +16,7 @@ public class ConvertActionGroup extends ActionGroup {
                 new Oct(),
                 new Bin(),
                 new DateTime(),
+                new Format(),
         };
     }
 
@@ -46,6 +47,12 @@ public class ConvertActionGroup extends ActionGroup {
     public static class DateTime extends ConvertAction {
         public DateTime() {
             super(ConvertType.DATETIME);
+        }
+    }
+
+    public static class Format extends ConvertAction {
+        public Format() {
+            super(ConvertType.FORMAT);
         }
     }
 

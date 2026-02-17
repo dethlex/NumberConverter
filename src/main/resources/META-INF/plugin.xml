@@ -24,34 +24,35 @@
 			<li>negative conversion (bit shifting)</li>
 			<li>multi carets</li>
 			<li>shortcuts</li>
-			<li>settings - date format, surrounding, etc.</li>
+			<li>settings – date format, surrounding, etc.</li>
 		</ul>
 		<br>
 		<h3>Current supported systems:</h3>
 		<ul>
-			<li>DEC - Decimal</li>
-			<li>HEX - Hexadecimal</li>
-			<li>OCT - Octal</li>
-			<li>BIN - Binary</li>
-			<li>DATE - Date/Time</li>
+			<li>DEC – Decimal</li>
+			<li>HEX – Hexadecimal</li>
+			<li>OCT – Octal</li>
+			<li>BIN – Binary</li>
+			<li>DATE – Date/Time</li>
+			<li>FORMAT – Number formatting (grouping, currency)</li>
 		</ul>
 		]]></description>
 
     <change-notes><![CDATA[
 		<ul>
-		    <li>2.1.1 - fix negative conversion</li>
-		    <li>2.1.0 - settings, date/time conversion</li>
-		    <li>2.0.0 - gradle build</li>
-			<li>1.5.0 - negative conversion</li>
-			<li>1.4.4 - fix errors</li>
-			<li>1.4.3 - support conversion from engineering type</li>
-			<li>1.4.2 - support big integer</li>
-			<li>1.4.1 - some fixes</li>
-			<li>1.4.0 - support multi carets and shortcuts</li>
-			<li>1.3.0 - support "_" in numbers</li>
-			<li>1.2.0 - negative conversion support</li>
-			<li>1.1.0 - changed compatibility</li>
-			<li>1.0.0 - added simple editor popup menu with positive number converter</li>
+		    <li>2.1.1 – fix negative conversion</li>
+		    <li>2.1.0 – settings, date/time conversion</li>
+		    <li>2.0.0 – gradle build</li>
+			<li>1.5.0 – negative conversion</li>
+			<li>1.4.4 – fix errors</li>
+			<li>1.4.3 – support conversion from engineering type</li>
+			<li>1.4.2 – support big integer</li>
+			<li>1.4.1 – some fixes</li>
+			<li>1.4.0 – support multi carets and shortcuts</li>
+			<li>1.3.0 – support "_" in numbers</li>
+			<li>1.2.0 – negative conversion support</li>
+			<li>1.1.0 – changed compatibility</li>
+			<li>1.0.0 – added simple editor popup menu with positive number converter</li>
 		</ul>
 		]]>
     </change-notes>
@@ -100,6 +101,10 @@
             <action id="NumberConverter.Group.Date" class="com.dethlex.numberconverter.ConvertActionGroup$DateTime"
                     text="DATE">
                 <keyboard-shortcut first-keystroke="control alt N" second-keystroke="T" keymap="$default"/>
+            </action>
+            <action id="NumberConverter.Group.Format" class="com.dethlex.numberconverter.ConvertActionGroup$Format"
+                    text="FORMAT">
+                <keyboard-shortcut first-keystroke="control alt N" second-keystroke="F" keymap="$default"/>
             </action>
 
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>

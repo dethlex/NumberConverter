@@ -6,9 +6,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public final class ConvertTypeParser {
-    private static final String[] typeStarts = {"0x", "0b", "0", "", ""};
+    // Indexed by ConvertType ordinal: HEX=0, BIN=1, OCT=2, DEC=3, DATETIME=4, FORMAT=5
+    private static final String[] typeStarts = {"0x", "0b", "0", "", "", ""};
 
-    private static final int[] typeRadixes = {16, 2, 8, 0, 0};
+    private static final int[] typeRadixes = {16, 2, 8, 0, 0, 0};
 
     public static String startWith(ConvertType type) {
         return typeStarts[type.ordinal()];

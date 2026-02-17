@@ -12,12 +12,21 @@ import org.jetbrains.annotations.Nullable;
 public class PluginPersistentStateComponent implements PersistentStateComponent<PluginPersistentStateComponent> {
     private static PluginPersistentStateComponent unitTestComponent;
 
-    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private boolean surroundEnable = false;
     private String surroundLeft = "";
     private String surroundRight = "";
+
+    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private boolean dateTimeUTC = false;
+
     private boolean isUpperCase = true;
+
+    private String formatDelimiter = ",";
+    private int formatGroupSize = 3;
+    private boolean formatDecimalEnabled = false;
+    private int formatDecimalPlaces = 2;
+    private String formatCurrencySymbol = "";
+    private boolean formatCurrencyPrefix = true;
 
     public String getDateTimeFormat() {
         return dateTimeFormat;
@@ -72,6 +81,54 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     public void setUpperCase(boolean isUpperCase) {
         this.isUpperCase = isUpperCase;
+    }
+
+    public String getFormatDelimiter() {
+        return formatDelimiter;
+    }
+
+    public void setFormatDelimiter(String formatDelimiter) {
+        this.formatDelimiter = formatDelimiter;
+    }
+
+    public int getFormatGroupSize() {
+        return formatGroupSize;
+    }
+
+    public void setFormatGroupSize(int formatGroupSize) {
+        this.formatGroupSize = formatGroupSize;
+    }
+
+    public boolean isFormatDecimalEnabled() {
+        return formatDecimalEnabled;
+    }
+
+    public void setFormatDecimalEnabled(boolean formatDecimalEnabled) {
+        this.formatDecimalEnabled = formatDecimalEnabled;
+    }
+
+    public int getFormatDecimalPlaces() {
+        return formatDecimalPlaces;
+    }
+
+    public void setFormatDecimalPlaces(int formatDecimalPlaces) {
+        this.formatDecimalPlaces = formatDecimalPlaces;
+    }
+
+    public String getFormatCurrencySymbol() {
+        return formatCurrencySymbol;
+    }
+
+    public void setFormatCurrencySymbol(String formatCurrencySymbol) {
+        this.formatCurrencySymbol = formatCurrencySymbol;
+    }
+
+    public boolean isFormatCurrencyPrefix() {
+        return formatCurrencyPrefix;
+    }
+
+    public void setFormatCurrencyPrefix(boolean formatCurrencyPrefix) {
+        this.formatCurrencyPrefix = formatCurrencyPrefix;
     }
 
     public static PluginPersistentStateComponent getInstance() {

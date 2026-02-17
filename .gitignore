@@ -40,4 +40,5 @@ bin/
 .idea/
 
 ### Mac OS ###
-.DS_Store
+.DS_Store!/
+.intellijPlatform/

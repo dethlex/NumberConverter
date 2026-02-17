@@ -1,9 +1,9 @@
 package com.dethlex.numberconverter;
 
 import com.dethlex.numberconverter.common.ConvertType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 
 public class ConvertActionTest {
     static class TestData {
@@ -21,7 +21,7 @@ public class ConvertActionTest {
     private void assertTestData(ConvertType system, TestData[] tests) {
         ConvertAction action = new ConvertAction(system);
         for (TestData test : tests) {
-            Assert.assertEquals(test.Error, test.Expected, action.convertByType(test.Value));
+            Assertions.assertEquals(test.Expected, action.convertByType(test.Value), test.Error);
         }
     }
 
@@ -147,5 +147,23 @@ public class ConvertActionTest {
         };
 
         assertTestData(ConvertType.DATETIME, tests);
+    }
+
+    @Test
+    @DisplayName("To FORMAT")
+    public void testToFormat() {
+        var tests = new TestData[]{
+                new TestData("1234567890", "1,234,567,890", "DEC format with comma grouping"),
+                new TestData("0xFF", "255", "HEX to formatted (small, no grouping)"),
+                new TestData("0b11111111", "255", "BIN to formatted (small, no grouping)"),
+                new TestData("-1234567", "-1,234,567", "Negative number formatting"),
+                new TestData("100", "100", "Small number no grouping needed"),
+                new TestData("1000", "1,000", "Exactly one group boundary"),
+                new TestData("12345678", "12,345,678", "Standard grouping"),
+                new TestData("1_000_000", "1,000,000", "Already underscore-formatted input"),
+                new TestData("qwerty", "can't convert", "Can't convert FORMAT"),
+        };
+
+        assertTestData(ConvertType.FORMAT, tests);
     }
 }

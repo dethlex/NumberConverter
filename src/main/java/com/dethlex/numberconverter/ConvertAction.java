@@ -4,6 +4,7 @@ import com.dethlex.numberconverter.common.ConvertType;
 import com.dethlex.numberconverter.common.IConverter;
 import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 import com.dethlex.numberconverter.date.ConvertDate;
+import com.dethlex.numberconverter.format.FormatNumber;
 import com.dethlex.numberconverter.number.ConvertNumber;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -37,6 +38,7 @@ public class ConvertAction extends AnAction {
         try {
             converter = switch (type) {
                 case DATETIME -> new ConvertDate(value);
+                case FORMAT -> new FormatNumber(value);
                 default -> new ConvertNumber(value);
             };
         } catch (Exception e) {

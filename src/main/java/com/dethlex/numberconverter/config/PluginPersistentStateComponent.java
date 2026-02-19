@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 @State(name = "NumberConverterState", storages = {@Storage("numberConverter.xml")})
 public class PluginPersistentStateComponent implements PersistentStateComponent<PluginPersistentStateComponent> {
+    public static final String[] BUILTIN_CURRENCIES = {"", "$", "€", "£", "¥", "₹", "₽", "₩", "₺", "₴", "₿"};
+
     private static PluginPersistentStateComponent unitTestComponent;
 
     private boolean surroundEnable = false;
@@ -27,6 +29,13 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
     private int formatDecimalPlaces = 2;
     private String formatCurrencySymbol = "";
     private boolean formatCurrencyPrefix = true;
+    private java.util.List<String> formatCustomCurrencies = new java.util.ArrayList<>();
+
+    public java.util.List<String> getAllCurrencySymbols() {
+        java.util.List<String> all = new java.util.ArrayList<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
+        all.addAll(formatCustomCurrencies);
+        return all;
+    }
 
     public String getDateTimeFormat() {
         return dateTimeFormat;
@@ -129,6 +138,14 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     public void setFormatCurrencyPrefix(boolean formatCurrencyPrefix) {
         this.formatCurrencyPrefix = formatCurrencyPrefix;
+    }
+
+    public java.util.List<String> getFormatCustomCurrencies() {
+        return formatCustomCurrencies;
+    }
+
+    public void setFormatCustomCurrencies(java.util.List<String> formatCustomCurrencies) {
+        this.formatCustomCurrencies = formatCustomCurrencies;
     }
 
     public static PluginPersistentStateComponent getInstance() {

@@ -33,6 +33,8 @@ public class SettingsForm {
 
     private boolean canSave = false;
 
+    private static final String[] BUILTIN_CURRENCIES = PluginPersistentStateComponent.BUILTIN_CURRENCIES;
+
     public SettingsForm() {
         dateTimeHelpLink.setListener((aSource, aLinkData) -> {
             try {
@@ -95,53 +97,93 @@ public class SettingsForm {
         };
         formatDelimiterTextField.getDocument().addDocumentListener(formatDocListener);
 
-        // Populate currency symbol combobox with popular currencies
-        formatCurrencySymbolComboBox.addItem("");
-        formatCurrencySymbolComboBox.addItem("$ — USD");
-        formatCurrencySymbolComboBox.addItem("€ — EUR");
-        formatCurrencySymbolComboBox.addItem("£ — GBP");
-        formatCurrencySymbolComboBox.addItem("¥ — JPY/CNY");
-        formatCurrencySymbolComboBox.addItem("₹ — INR");
-        formatCurrencySymbolComboBox.addItem("₽ — RUB");
-        formatCurrencySymbolComboBox.addItem("₩ — KRW");
-        formatCurrencySymbolComboBox.addItem("₿ — BTC");
-        formatCurrencySymbolComboBox.addItem("Fr — CHF");
-        formatCurrencySymbolComboBox.addItem("kr — SEK/NOK/DKK");
-        formatCurrencySymbolComboBox.addItem("R$ — BRL");
-        formatCurrencySymbolComboBox.addItem("zł — PLN");
-        formatCurrencySymbolComboBox.addItem("₴ — UAH");
-        formatCurrencySymbolComboBox.addItem("₺ — TRY");
-        formatCurrencySymbolComboBox.addItem("฿ — THB");
-        formatCurrencySymbolComboBox.addItem("₫ — VND");
+        // Built-in currency symbols
+        for (String s : BUILTIN_CURRENCIES) {
+            formatCurrencySymbolComboBox.addItem(s);
+        }
 
         formatCurrencySymbolComboBox.addActionListener(e -> updateFormatPreview());
         JTextField comboEditor = (JTextField) formatCurrencySymbolComboBox.getEditor().getEditorComponent();
         comboEditor.getDocument().addDocumentListener(formatDocListener);
+
+        // Right-click context menu: add if not in list, remove if custom
+        java.awt.event.MouseAdapter currencyContextMenu = new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) showCurrencyContextMenu(e);
+            }
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) showCurrencyContextMenu(e);
+            }
+        };
+        formatCurrencySymbolComboBox.addMouseListener(currencyContextMenu);
+        comboEditor.addMouseListener(currencyContextMenu);
+    }
+
+    private void showCurrencyContextMenu(java.awt.event.MouseEvent e) {
+        String symbol = getCurrencySymbol();
+        if (symbol.isEmpty()) return;
+
+        java.util.Set<String> builtins = new java.util.HashSet<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
+        JPopupMenu menu = new JPopupMenu();
+
+        if (lacksItem(symbol)) {
+            JMenuItem addItem = new JMenuItem("Add \"" + symbol + "\"");
+            addItem.addActionListener(ev -> {
+                formatCurrencySymbolComboBox.addItem(symbol);
+                formatCurrencySymbolComboBox.setSelectedItem(symbol);
+            });
+            menu.add(addItem);
+        } else if (!builtins.contains(symbol)) {
+            JMenuItem removeItem = new JMenuItem("Remove \"" + symbol + "\"");
+            removeItem.addActionListener(ev -> {
+                formatCurrencySymbolComboBox.removeItem(symbol);
+                formatCurrencySymbolComboBox.setSelectedIndex(0);
+            });
+            menu.add(removeItem);
+        } else {
+            return;
+        }
+
+        menu.show((java.awt.Component) e.getSource(), e.getX(), e.getY());
+    }
+
+    private boolean lacksItem(String symbol) {
+        for (int i = 0; i < formatCurrencySymbolComboBox.getItemCount(); i++) {
+            if (formatCurrencySymbolComboBox.getItemAt(i).equals(symbol)) return false;
+        }
+        return true;
+    }
+
+    private java.util.List<String> getCustomCurrencies() {
+        java.util.List<String> customs = new java.util.ArrayList<>();
+        java.util.Set<String> builtins = new java.util.HashSet<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
+        for (int i = 0; i < formatCurrencySymbolComboBox.getItemCount(); i++) {
+            String item = formatCurrencySymbolComboBox.getItemAt(i);
+            if (!builtins.contains(item)) customs.add(item);
+        }
+        return customs;
     }
 
     private String getCurrencySymbol() {
         Object item = formatCurrencySymbolComboBox.getEditor().getItem();
-        if (item == null) return "";
-        String value = item.toString().trim();
-        // Extract symbol before " — " if present (e.g. "$ — USD" → "$")
-        int dashIdx = value.indexOf(" \u2014 ");
-        if (dashIdx >= 0) {
-            return value.substring(0, dashIdx);
-        }
-        return value;
+        return item == null ? "" : item.toString().trim();
     }
 
     private void setCurrencySymbol(String symbol) {
-        // Try to find a matching item in the combobox
+        // Select existing item if found
         for (int i = 0; i < formatCurrencySymbolComboBox.getItemCount(); i++) {
-            String item = formatCurrencySymbolComboBox.getItemAt(i);
-            if (item.startsWith(symbol + " \u2014 ") || item.equals(symbol)) {
+            if (formatCurrencySymbolComboBox.getItemAt(i).equals(symbol)) {
                 formatCurrencySymbolComboBox.setSelectedIndex(i);
                 return;
             }
         }
-        // Custom symbol — set it directly in the editor
-        formatCurrencySymbolComboBox.getEditor().setItem(symbol);
+        // Not found — add it and select it
+        if (!symbol.isEmpty()) {
+            formatCurrencySymbolComboBox.addItem(symbol);
+        }
+        formatCurrencySymbolComboBox.setSelectedItem(symbol);
     }
 
     private void updateFormatPreview() {
@@ -159,7 +201,7 @@ public class SettingsForm {
             int firstGroup = len % groupSize;
             if (firstGroup > 0) grouped.append(sample, 0, firstGroup);
             for (int i = firstGroup; i < len; i += groupSize) {
-                if (grouped.length() > 0) grouped.append(delimiter);
+                if (!grouped.isEmpty()) grouped.append(delimiter);
                 grouped.append(sample, i, i + groupSize);
             }
 
@@ -196,6 +238,14 @@ public class SettingsForm {
         data.setFormatDecimalPlaces((Integer) formatDecimalPlacesSpinner.getValue());
         data.setFormatCurrencySymbol(getCurrencySymbol());
         data.setFormatCurrencyPrefix(formatCurrencyPrefixRadio.isSelected());
+        // Persist custom (non-builtin) currencies
+        java.util.List<String> customs = new java.util.ArrayList<>();
+        java.util.Set<String> builtins = new java.util.HashSet<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
+        for (int i = 0; i < formatCurrencySymbolComboBox.getItemCount(); i++) {
+            String item = formatCurrencySymbolComboBox.getItemAt(i);
+            if (!builtins.contains(item)) customs.add(item);
+        }
+        data.setFormatCustomCurrencies(customs);
     }
 
     public void setData(PluginPersistentStateComponent data) {
@@ -210,6 +260,16 @@ public class SettingsForm {
         formatGroupSizeSpinner.setValue(data.getFormatGroupSize());
         formatDecimalCheckBox.setSelected(data.isFormatDecimalEnabled());
         formatDecimalPlacesSpinner.setValue(data.getFormatDecimalPlaces());
+        // Restore custom currencies (remove old ones first, keep builtins)
+        java.util.Set<String> builtins = new java.util.HashSet<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
+        for (int i = formatCurrencySymbolComboBox.getItemCount() - 1; i >= 0; i--) {
+            if (!builtins.contains(formatCurrencySymbolComboBox.getItemAt(i))) {
+                formatCurrencySymbolComboBox.removeItemAt(i);
+            }
+        }
+        for (String custom : data.getFormatCustomCurrencies()) {
+            if (lacksItem(custom)) formatCurrencySymbolComboBox.addItem(custom);
+        }
         setCurrencySymbol(data.getFormatCurrencySymbol());
         formatCurrencyPrefixRadio.setSelected(data.isFormatCurrencyPrefix());
         formatCurrencySuffixRadio.setSelected(!data.isFormatCurrencyPrefix());
@@ -231,6 +291,7 @@ public class SettingsForm {
                 formatDecimalCheckBox.isSelected() != data.isFormatDecimalEnabled() ||
                 !formatDecimalPlacesSpinner.getValue().equals(data.getFormatDecimalPlaces()) ||
                 !getCurrencySymbol().equals(data.getFormatCurrencySymbol()) ||
-                formatCurrencyPrefixRadio.isSelected() != data.isFormatCurrencyPrefix();
+                formatCurrencyPrefixRadio.isSelected() != data.isFormatCurrencyPrefix() ||
+                !getCustomCurrencies().equals(data.getFormatCustomCurrencies());
     }
 }

@@ -15,15 +15,9 @@ public final class ConvertNumber extends IConverter {
         var state = PluginPersistentStateComponent.getInstance();
         String delimiter = state.getFormatDelimiter();
 
-        // Strip configured delimiter and common formatting characters
         value = value.strip();
-
-        // Strip all common delimiters: underscore, comma, space, and the configured delimiter
-        value = value.replaceAll("[_,\\s]", "");
-        if (!delimiter.isEmpty() && !delimiter.matches("[_,\\s]")) {
-            // If delimiter is something else (like "." or custom), strip it too
-            value = value.replace(delimiter, "");
-        }
+        value = stripCurrencySymbol(value, state);
+        value = stripGroupingDelimiters(value, delimiter);
 
         this.negative = value.startsWith("-");
         this.integer = ConvertTypeParser.parse(value);

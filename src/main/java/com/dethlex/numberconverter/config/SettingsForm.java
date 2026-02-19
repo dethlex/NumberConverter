@@ -202,7 +202,7 @@ public class SettingsForm {
             if (firstGroup > 0) grouped.append(sample, 0, firstGroup);
             for (int i = firstGroup; i < len; i += groupSize) {
                 if (!grouped.isEmpty()) grouped.append(delimiter);
-                grouped.append(sample, i, i + groupSize);
+                grouped.append(sample, i, Math.min(i + groupSize, len));
             }
 
             StringBuilder preview = new StringBuilder();

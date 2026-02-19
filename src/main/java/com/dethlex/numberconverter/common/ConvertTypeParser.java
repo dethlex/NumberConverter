@@ -23,7 +23,8 @@ public final class ConvertTypeParser {
         var system = determineType(value);
 
         if (system == ConvertType.DATETIME) {
-            value = String.valueOf(ConvertDate.fromString(value).getTime() / 1000);
+            String dateStr = value.startsWith("-") ? value.substring(1) : value;
+            value = String.valueOf(ConvertDate.fromString(dateStr).getTime() / 1000);
             system = ConvertType.DEC;
         }
 

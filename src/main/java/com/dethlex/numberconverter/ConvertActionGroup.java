@@ -56,9 +56,8 @@ public class ConvertActionGroup extends ActionGroup {
         }
     }
 
-    @NotNull
     @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent anActionEvent) {
+    public AnAction @NotNull [] getChildren(@Nullable AnActionEvent anActionEvent) {
         return convertActions;
     }
 }

@@ -1,26 +1,14 @@
 package com.dethlex.numberconverter.format;
 
 import com.dethlex.numberconverter.common.ConvertType;
-import com.dethlex.numberconverter.common.ConvertTypeParser;
-import com.dethlex.numberconverter.common.IConverter;
+import com.dethlex.numberconverter.common.NumberConverter;
 import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 
 import java.math.BigInteger;
 
-public final class FormatNumber extends IConverter {
-    private final BigInteger integer;
-    private final boolean negative;
-
+public final class FormatNumber extends NumberConverter {
     public FormatNumber(String value) {
-        var state = PluginPersistentStateComponent.getInstance();
-        String delimiter = state.getFormatDelimiter();
-
-        value = value.strip();
-        value = stripCurrencySymbol(value, state);
-        value = stripGroupingDelimiters(value, delimiter);
-
-        this.negative = value.startsWith("-");
-        this.integer = ConvertTypeParser.parse(value);
+        super(value);
     }
 
     @Override

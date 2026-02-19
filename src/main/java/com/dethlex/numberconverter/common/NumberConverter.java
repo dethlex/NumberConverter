@@ -12,18 +12,17 @@ public abstract class NumberConverter extends IConverter {
 
     protected NumberConverter(String value) {
         var state = PluginPersistentStateComponent.getInstance();
-        String delimiter = state.getFormatDelimiter();
 
         value = value.strip();
-        value = stripCurrencySymbol(value, state);
-        value = stripGroupingDelimiters(value, delimiter);
+        value = stripCurrencySymbol(value, state.getAllCurrencySymbols());
+        value = stripGroupingDelimiters(value, state.getFormatDelimiter());
 
         this.negative = value.startsWith("-");
         this.integer = ConvertTypeParser.parse(value);
     }
 
-    protected static String stripCurrencySymbol(String value, com.dethlex.numberconverter.config.PluginPersistentStateComponent state) {
-        for (String symbol : state.getAllCurrencySymbols()) {
+    protected static String stripCurrencySymbol(String value, java.util.List<String> allCurrencySymbols) {
+        for (String symbol : allCurrencySymbols) {
             if (symbol.isEmpty()) continue;
             if (value.startsWith(symbol)) return value.substring(symbol.length()).strip();
             if (value.endsWith(symbol)) return value.substring(0, value.length() - symbol.length()).strip();

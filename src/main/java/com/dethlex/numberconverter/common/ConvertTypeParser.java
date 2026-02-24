@@ -46,7 +46,8 @@ public final class ConvertTypeParser {
 
         value = value.toUpperCase();
         for (int i = 0; i < typeStarts.length; i++) {
-            if (value.startsWith(typeStarts[i].toUpperCase())) {
+            var prefix = typeStarts[i].toUpperCase();
+            if (!prefix.isEmpty() && value.startsWith(prefix) && value.length() > prefix.length()) {
                 return ConvertType.values()[i];
             }
         }

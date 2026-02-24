@@ -159,4 +159,61 @@ public class FormatNumberTest {
         var formatter = new FormatNumber("5");
         Assertions.assertEquals("5", formatter.toString(ConvertType.FORMAT));
     }
+
+    @Test
+    @DisplayName("Zero value formats to single zero")
+    public void testZeroValue() {
+        var formatter = new FormatNumber("0");
+        Assertions.assertEquals("0", formatter.toString(ConvertType.FORMAT));
+    }
+
+    @Test
+    @DisplayName("Zero with decimals enabled")
+    public void testZeroWithDecimals() {
+        state.setFormatDecimalEnabled(true);
+        state.setFormatDecimalPlaces(2);
+        var formatter = new FormatNumber("0");
+        Assertions.assertEquals("0.00", formatter.toString(ConvertType.FORMAT));
+    }
+
+    @Test
+    @DisplayName("Space-delimited input is stripped and re-formatted")
+    public void testSpaceDelimitedInput() {
+        var formatter = new FormatNumber("1 234 567");
+        Assertions.assertEquals("1,234,567", formatter.toString(ConvertType.FORMAT));
+    }
+
+    @Test
+    @DisplayName("Currency symbol prefix in input is stripped before re-formatting")
+    public void testCurrencyStrippedFromInput() {
+        state.setFormatCurrencySymbol("$");
+        state.setFormatCurrencyPrefix(true);
+        var formatter = new FormatNumber("$1,234");
+        Assertions.assertEquals("$1,234", formatter.toString(ConvertType.FORMAT));
+    }
+
+    @Test
+    @DisplayName("Currency symbol suffix in input is stripped before re-formatting")
+    public void testCurrencySuffixStrippedFromInput() {
+        state.setFormatCurrencySymbol("\u20AC");
+        state.setFormatCurrencyPrefix(false);
+        var formatter = new FormatNumber("1,234\u20AC");
+        Assertions.assertEquals("1,234\u20AC", formatter.toString(ConvertType.FORMAT));
+    }
+
+    @Test
+    @DisplayName("Group size of 1 produces per-digit grouping")
+    public void testGroupSizeOne() {
+        state.setFormatGroupSize(1);
+        var formatter = new FormatNumber("1234");
+        Assertions.assertEquals("1,2,3,4", formatter.toString(ConvertType.FORMAT));
+    }
+
+    @Test
+    @DisplayName("Dot-delimited input is stripped when dot is the configured delimiter")
+    public void testDotDelimitedInput() {
+        state.setFormatDelimiter(".");
+        var formatter = new FormatNumber("1.234.567");
+        Assertions.assertEquals("1.234.567", formatter.toString(ConvertType.FORMAT));
+    }
 }

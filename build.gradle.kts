@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testRuntimeOnly("junit:junit:4.13.2")
 
     intellijPlatform {
         create(properties("platformType"), properties("platformVersion"))
@@ -32,7 +33,7 @@ dependencies {
         plugins(properties("platformPlugins").map {
             it.split(',').map(String::trim).filter(String::isNotEmpty)
         })
-        testFramework(TestFrameworkType.Platform)
+        testFramework(TestFrameworkType.JUnit5)
     }
 }
 
@@ -97,6 +98,11 @@ tasks {
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
+    }
+
+    test {
+        useJUnitPlatform()
+        jvmArgs("-Duser.timezone=UTC")
     }
 
     runIde {

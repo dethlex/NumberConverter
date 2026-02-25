@@ -23,7 +23,8 @@ public abstract class ConvertActionTestBase {
         state.setFormatCurrencyPrefix(true);
     }
 
-    public record TestCase(String input, String expected, String message) {}
+    public record TestCase(String input, String expected, String message) {
+    }
 
     public void assertConverts(ConvertType type, TestCase... cases) {
         ConvertAction action = new ConvertAction(type);

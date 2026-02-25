@@ -24,9 +24,9 @@ public class ConvertActionTest extends ConvertActionTestBase {
     @Test
     @DisplayName("Zero converts correctly across all number systems")
     public void testZeroAllTypes() {
-        assertEquals("0",   new ConvertAction(ConvertType.DEC).convertByType("0"), "Zero → DEC");
+        assertEquals("0", new ConvertAction(ConvertType.DEC).convertByType("0"), "Zero → DEC");
         assertEquals("0x0", new ConvertAction(ConvertType.HEX).convertByType("0"), "Zero → HEX");
         assertEquals("0b0", new ConvertAction(ConvertType.BIN).convertByType("0"), "Zero → BIN");
-        assertEquals("00",  new ConvertAction(ConvertType.OCT).convertByType("0"), "Zero → OCT");
+        assertEquals("00", new ConvertAction(ConvertType.OCT).convertByType("0"), "Zero → OCT");
     }
 }

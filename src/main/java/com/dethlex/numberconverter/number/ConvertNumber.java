@@ -32,7 +32,7 @@ public final class ConvertNumber extends NumberConverter {
         var state = PluginPersistentStateComponent.getInstance();
         var integer = shiftForType(system);
         var number = integer.toString(ConvertTypeParser.radix(system));
-        number =  state.isUpperCase() ? number.toUpperCase() : number.toLowerCase();
+        number = state.isUpperCase() ? number.toUpperCase() : number.toLowerCase();
         return ConvertTypeParser.startWith(system) + number;
     }
 }

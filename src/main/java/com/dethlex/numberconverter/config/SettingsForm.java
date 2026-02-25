@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
-import java.awt.Desktop;
-import java.net.URI;
-import java.text.SimpleDateFormat;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+import java.awt.*;
+import java.net.URI;
+import java.text.SimpleDateFormat;
 
 public class SettingsForm {
     private JTextField dateTimeTextField;
@@ -78,9 +78,7 @@ public class SettingsForm {
             surroundRightTextField.setEnabled(surroundEnableCheckBox.isSelected());
         });
 
-        dateTimeUTCCheckBox.addChangeListener(e -> {
-            dateTimeTextField.setText(dateTimeTextField.getText());
-        });
+        dateTimeUTCCheckBox.addChangeListener(e -> dateTimeTextField.setText(dateTimeTextField.getText()));
 
         // Number format section
         formatGroupSizeSpinner.setModel(new SpinnerNumberModel(3, 1, 20, 1));
@@ -107,7 +105,6 @@ public class SettingsForm {
         formatDelimiterTextField.getDocument().addDocumentListener(formatDocListener);
         ((AbstractDocument) formatDelimiterTextField.getDocument()).setDocumentFilter(new MaxLengthDocumentFilter(1));
 
-        // Built-in currency symbols
         for (String s : BUILTIN_CURRENCIES) {
             formatCurrencySymbolComboBox.addItem(s);
         }
@@ -117,12 +114,12 @@ public class SettingsForm {
         comboEditor.getDocument().addDocumentListener(formatDocListener);
         ((AbstractDocument) comboEditor.getDocument()).setDocumentFilter(new MaxLengthDocumentFilter(5));
 
-        // Right-click context menu: add if not in list, remove if custom
         java.awt.event.MouseAdapter currencyContextMenu = new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 if (e.isPopupTrigger()) showCurrencyContextMenu(e);
             }
+
             @Override
             public void mouseReleased(java.awt.event.MouseEvent e) {
                 if (e.isPopupTrigger()) showCurrencyContextMenu(e);
@@ -183,14 +180,13 @@ public class SettingsForm {
     }
 
     private void setCurrencySymbol(String symbol) {
-        // Select existing item if found
         for (int i = 0; i < formatCurrencySymbolComboBox.getItemCount(); i++) {
             if (formatCurrencySymbolComboBox.getItemAt(i).equals(symbol)) {
                 formatCurrencySymbolComboBox.setSelectedIndex(i);
                 return;
             }
         }
-        // Not found — add it and select it
+
         if (!symbol.isEmpty()) {
             formatCurrencySymbolComboBox.addItem(symbol);
         }
@@ -206,7 +202,6 @@ public class SettingsForm {
             String currencySymbol = getCurrencySymbol();
             boolean currencyPrefix = formatCurrencyPrefixRadio.isSelected();
 
-            // Currency symbol validation
             for (char c : currencySymbol.toCharArray()) {
                 if (Character.isDigit(c)) {
                     canSaveFormat = false;
@@ -222,7 +217,6 @@ public class SettingsForm {
 
             canSaveFormat = true;
 
-            // Build warning for non-blocking delimiter issues
             String warning = "";
             if (!delimiter.isEmpty()) {
                 char ch = delimiter.charAt(0);
@@ -290,7 +284,7 @@ public class SettingsForm {
         formatGroupSizeSpinner.setValue(data.getFormatGroupSize());
         formatDecimalCheckBox.setSelected(data.isFormatDecimalEnabled());
         formatDecimalPlacesSpinner.setValue(data.getFormatDecimalPlaces());
-        // Restore custom currencies (remove old ones first, keep builtins)
+
         java.util.Set<String> builtins = new java.util.HashSet<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
         for (int i = formatCurrencySymbolComboBox.getItemCount() - 1; i >= 0; i--) {
             if (!builtins.contains(formatCurrencySymbolComboBox.getItemAt(i))) {

@@ -59,12 +59,12 @@ public class FormatNumberTest {
     @Test
     @DisplayName("Currency suffix formatting")
     public void testCurrencySuffix() {
-        state.setFormatCurrencySymbol("\u20AC");
+        state.setFormatCurrencySymbol("€");
         state.setFormatCurrencyPrefix(false);
         state.setFormatDecimalEnabled(true);
         state.setFormatDecimalPlaces(2);
         var formatter = new FormatNumber("1234");
-        Assertions.assertEquals("1,234.00\u20AC", formatter.toString(ConvertType.FORMAT));
+        Assertions.assertEquals("1,234.00€", formatter.toString(ConvertType.FORMAT));
     }
 
     @Test
@@ -73,10 +73,10 @@ public class FormatNumberTest {
         state.setFormatDelimiter(".");
         state.setFormatDecimalEnabled(true);
         state.setFormatDecimalPlaces(2);
-        state.setFormatCurrencySymbol("\u20AC");
+        state.setFormatCurrencySymbol("€");
         state.setFormatCurrencyPrefix(false);
         var formatter = new FormatNumber("1234");
-        Assertions.assertEquals("1.234,00\u20AC", formatter.toString(ConvertType.FORMAT));
+        Assertions.assertEquals("1.234,00€", formatter.toString(ConvertType.FORMAT));
     }
 
     @Test
@@ -195,10 +195,10 @@ public class FormatNumberTest {
     @Test
     @DisplayName("Currency symbol suffix in input is stripped before re-formatting")
     public void testCurrencySuffixStrippedFromInput() {
-        state.setFormatCurrencySymbol("\u20AC");
+        state.setFormatCurrencySymbol("€");
         state.setFormatCurrencyPrefix(false);
-        var formatter = new FormatNumber("1,234\u20AC");
-        Assertions.assertEquals("1,234\u20AC", formatter.toString(ConvertType.FORMAT));
+        var formatter = new FormatNumber("1,234€");
+        Assertions.assertEquals("1,234€", formatter.toString(ConvertType.FORMAT));
     }
 
     @Test

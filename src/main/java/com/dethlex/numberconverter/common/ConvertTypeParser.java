@@ -4,6 +4,7 @@ import com.dethlex.numberconverter.date.ConvertDate;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 public final class ConvertTypeParser {
     // Indexed by ConvertType ordinal: HEX=0, BIN=1, OCT=2, DEC=3, DATETIME=4, FORMAT=5
@@ -24,7 +25,7 @@ public final class ConvertTypeParser {
 
         if (system == ConvertType.DATETIME) {
             String dateStr = value.startsWith("-") ? value.substring(1) : value;
-            value = String.valueOf(ConvertDate.fromString(dateStr).getTime() / 1000);
+            value = String.valueOf(Objects.requireNonNull(ConvertDate.fromString(dateStr)).getTime() / 1000);
             system = ConvertType.DEC;
         }
 

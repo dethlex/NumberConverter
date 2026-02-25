@@ -10,6 +10,10 @@ import javax.swing.event.DocumentEvent;
 import java.awt.Desktop;
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class SettingsForm {
     private JTextField dateTimeTextField;
@@ -31,7 +35,12 @@ public class SettingsForm {
     private JRadioButton formatCurrencySuffixRadio;
     private JLabel formatPreviewLabel;
 
-    private boolean canSave = false;
+    private boolean canSaveDateTime = false;
+    private boolean canSaveFormat = true;
+
+    private boolean canSave() {
+        return canSaveDateTime && canSaveFormat;
+    }
 
     private static final String[] BUILTIN_CURRENCIES = PluginPersistentStateComponent.BUILTIN_CURRENCIES;
 
@@ -47,7 +56,7 @@ public class SettingsForm {
         dateTimeTextField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(@NotNull DocumentEvent documentEvent) {
-                canSave = true;
+                canSaveDateTime = true;
                 try {
                     SimpleDateFormat formatter = new SimpleDateFormat(dateTimeTextField.getText());
                     var date = formatter.parse("2006-01-02 15:04:05");
@@ -59,7 +68,7 @@ public class SettingsForm {
                     );
                 } catch (Exception ex) {
                     dateTimeTestLabel.setText("Invalid format");
-                    canSave = false;
+                    canSaveDateTime = false;
                 }
             }
         });
@@ -96,6 +105,7 @@ public class SettingsForm {
             }
         };
         formatDelimiterTextField.getDocument().addDocumentListener(formatDocListener);
+        ((AbstractDocument) formatDelimiterTextField.getDocument()).setDocumentFilter(new MaxLengthDocumentFilter(1));
 
         // Built-in currency symbols
         for (String s : BUILTIN_CURRENCIES) {
@@ -105,6 +115,7 @@ public class SettingsForm {
         formatCurrencySymbolComboBox.addActionListener(e -> updateFormatPreview());
         JTextField comboEditor = (JTextField) formatCurrencySymbolComboBox.getEditor().getEditorComponent();
         comboEditor.getDocument().addDocumentListener(formatDocListener);
+        ((AbstractDocument) comboEditor.getDocument()).setDocumentFilter(new MaxLengthDocumentFilter(5));
 
         // Right-click context menu: add if not in list, remove if custom
         java.awt.event.MouseAdapter currencyContextMenu = new java.awt.event.MouseAdapter() {
@@ -195,6 +206,31 @@ public class SettingsForm {
             String currencySymbol = getCurrencySymbol();
             boolean currencyPrefix = formatCurrencyPrefixRadio.isSelected();
 
+            // Currency symbol validation
+            for (char c : currencySymbol.toCharArray()) {
+                if (Character.isDigit(c)) {
+                    canSaveFormat = false;
+                    formatPreviewLabel.setText("Currency symbol must not contain digits");
+                    return;
+                }
+                if (Character.isWhitespace(c)) {
+                    canSaveFormat = false;
+                    formatPreviewLabel.setText("Currency symbol must not contain whitespace");
+                    return;
+                }
+            }
+
+            canSaveFormat = true;
+
+            // Build warning for non-blocking delimiter issues
+            String warning = "";
+            if (!delimiter.isEmpty()) {
+                char ch = delimiter.charAt(0);
+                if (Character.isDigit(ch) || ch == '-') {
+                    warning = " (warning: delimiter may be confused with number characters)";
+                }
+            }
+
             String sample = "1234567890";
             StringBuilder grouped = new StringBuilder();
             int len = sample.length();
@@ -215,8 +251,9 @@ public class SettingsForm {
             }
             if (!currencyPrefix && !currencySymbol.isEmpty()) preview.append(currencySymbol);
 
-            formatPreviewLabel.setText("Preview: " + preview);
+            formatPreviewLabel.setText("Preview: " + preview + warning);
         } catch (Exception ex) {
+            canSaveFormat = false;
             formatPreviewLabel.setText("Preview: (invalid settings)");
         }
     }
@@ -238,14 +275,7 @@ public class SettingsForm {
         data.setFormatDecimalPlaces((Integer) formatDecimalPlacesSpinner.getValue());
         data.setFormatCurrencySymbol(getCurrencySymbol());
         data.setFormatCurrencyPrefix(formatCurrencyPrefixRadio.isSelected());
-        // Persist custom (non-builtin) currencies
-        java.util.List<String> customs = new java.util.ArrayList<>();
-        java.util.Set<String> builtins = new java.util.HashSet<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
-        for (int i = 0; i < formatCurrencySymbolComboBox.getItemCount(); i++) {
-            String item = formatCurrencySymbolComboBox.getItemAt(i);
-            if (!builtins.contains(item)) customs.add(item);
-        }
-        data.setFormatCustomCurrencies(customs);
+        data.setFormatCustomCurrencies(getCustomCurrencies());
     }
 
     public void setData(PluginPersistentStateComponent data) {
@@ -275,8 +305,30 @@ public class SettingsForm {
         formatCurrencySuffixRadio.setSelected(!data.isFormatCurrencyPrefix());
     }
 
+    private static class MaxLengthDocumentFilter extends DocumentFilter {
+        private final int maxLength;
+
+        MaxLengthDocumentFilter(int maxLength) {
+            this.maxLength = maxLength;
+        }
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            if (fb.getDocument().getLength() + string.length() <= maxLength) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (fb.getDocument().getLength() - length + text.length() <= maxLength) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+    }
+
     public boolean isModified(PluginPersistentStateComponent data) {
-        if (!canSave) {
+        if (!canSave()) {
             return false;
         }
 

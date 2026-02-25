@@ -15,6 +15,12 @@ public abstract class ConvertActionTestBase {
         state.setSurroundEnable(false);
         state.setSurroundLeft("");
         state.setSurroundRight("");
+        state.setFormatDelimiter(",");
+        state.setFormatGroupSize(3);
+        state.setFormatDecimalEnabled(false);
+        state.setFormatDecimalPlaces(2);
+        state.setFormatCurrencySymbol("");
+        state.setFormatCurrencyPrefix(true);
     }
 
     public record TestCase(String input, String expected, String message) {}

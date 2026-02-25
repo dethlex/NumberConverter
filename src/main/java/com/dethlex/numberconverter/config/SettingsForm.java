@@ -24,6 +24,7 @@ public class SettingsForm {
     private JTextField surroundRightTextField;
     private JLabel dateTimeTestLabel;
     private JCheckBox dateTimeUTCCheckBox;
+    private JCheckBox dateTimeMillisecondsCheckBox;
     private JRadioButton lowerCaseRadioButton;
     private JRadioButton upperCaseRadioButton;
     private JTextField formatDelimiterTextField;
@@ -59,7 +60,7 @@ public class SettingsForm {
                 canSaveDateTime = true;
                 try {
                     SimpleDateFormat formatter = new SimpleDateFormat(dateTimeTextField.getText());
-                    var date = formatter.parse("2006-01-02 15:04:05");
+                    var date = new java.util.Date(1136214245000L);
                     if (dateTimeUTCCheckBox.isSelected()) {
                         formatter.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
                     }
@@ -259,6 +260,7 @@ public class SettingsForm {
     public void getData(PluginPersistentStateComponent data) {
         data.setDateTimeFormat(dateTimeTextField.getText());
         data.setDateTimeUTC(dateTimeUTCCheckBox.isSelected());
+        data.setDateTimeMilliseconds(dateTimeMillisecondsCheckBox.isSelected());
         data.setSurroundEnable(surroundEnableCheckBox.isSelected());
         data.setSurroundLeft(surroundLeftTextField.getText());
         data.setSurroundRight(surroundRightTextField.getText());
@@ -275,6 +277,7 @@ public class SettingsForm {
     public void setData(PluginPersistentStateComponent data) {
         dateTimeTextField.setText(data.getDateTimeFormat());
         dateTimeUTCCheckBox.setSelected(data.isDateTimeUTC());
+        dateTimeMillisecondsCheckBox.setSelected(data.isDateTimeMilliseconds());
         surroundEnableCheckBox.setSelected(data.isSurroundEnable());
         surroundLeftTextField.setText(data.getSurroundLeft());
         surroundRightTextField.setText(data.getSurroundRight());
@@ -328,6 +331,7 @@ public class SettingsForm {
 
         return !dateTimeTextField.getText().equals(data.getDateTimeFormat()) ||
                 dateTimeUTCCheckBox.isSelected() != data.isDateTimeUTC() ||
+                dateTimeMillisecondsCheckBox.isSelected() != data.isDateTimeMilliseconds() ||
                 surroundEnableCheckBox.isSelected() != data.isSurroundEnable() ||
                 !surroundLeftTextField.getText().equals(data.getSurroundLeft()) ||
                 !surroundRightTextField.getText().equals(data.getSurroundRight()) ||

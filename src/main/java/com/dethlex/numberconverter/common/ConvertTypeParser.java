@@ -1,5 +1,6 @@
 package com.dethlex.numberconverter.common;
 
+import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 import com.dethlex.numberconverter.date.ConvertDate;
 
 import java.math.BigDecimal;
@@ -25,7 +26,9 @@ public final class ConvertTypeParser {
 
         if (system == ConvertType.DATETIME) {
             String dateStr = value.startsWith("-") ? value.substring(1) : value;
-            value = String.valueOf(Objects.requireNonNull(ConvertDate.fromString(dateStr)).getTime() / 1000);
+            long millis = Objects.requireNonNull(ConvertDate.fromString(dateStr)).getTime();
+            boolean useMillis = PluginPersistentStateComponent.getInstance().isDateTimeMilliseconds();
+            value = String.valueOf(useMillis ? millis : millis / 1000);
             system = ConvertType.DEC;
         }
 

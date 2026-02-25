@@ -25,8 +25,8 @@ public final class ConvertDate extends IConverter {
             instant = parsed.toInstant();
         } else {
             String decimal = new ConvertNumber(value).toString(ConvertType.DEC);
-            String digits = decimal.startsWith("-") ? decimal.substring(1) : decimal;
-            if (digits.length() > 10) {
+            boolean useMillis = PluginPersistentStateComponent.getInstance().isDateTimeMilliseconds();
+            if (useMillis) {
                 instant = Instant.ofEpochMilli(Long.parseLong(decimal));
             } else {
                 instant = Instant.ofEpochSecond(Long.parseLong(decimal));

@@ -20,6 +20,7 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private boolean dateTimeUTC = false;
+    private boolean dateTimeMilliseconds = false;
 
     private boolean isUpperCase = true;
 
@@ -51,6 +52,14 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     public void setDateTimeUTC(boolean dateTimeUTC) {
         this.dateTimeUTC = dateTimeUTC;
+    }
+
+    public boolean isDateTimeMilliseconds() {
+        return dateTimeMilliseconds;
+    }
+
+    public void setDateTimeMilliseconds(boolean dateTimeMilliseconds) {
+        this.dateTimeMilliseconds = dateTimeMilliseconds;
     }
 
     public boolean isSurroundEnable() {

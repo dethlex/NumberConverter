@@ -19,6 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,7 @@ public class ConvertAction extends AnAction {
         IConverter converter;
 
         try {
+            value = dateToTimestamp(value);
             converter = switch (type) {
                 case DATETIME -> new ConvertDate(value);
                 case FORMAT -> new FormatNumber(value);
@@ -50,6 +52,16 @@ public class ConvertAction extends AnAction {
         }
 
         return config.surroundText(converter.toString(type));
+    }
+
+    private String dateToTimestamp(String value) {
+        if (type == ConvertType.DATETIME) return value;
+        Date date = ConvertDate.fromString(value.strip());
+        if (date == null) return value;
+        long ts = config.isDateTimeMilliseconds()
+                ? date.getTime()
+                : date.getTime() / 1000;
+        return String.valueOf(ts);
     }
 
     private Pair<Integer, String> convertAll(@NotNull List<Caret> caretList) {

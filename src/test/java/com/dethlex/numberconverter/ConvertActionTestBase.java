@@ -11,10 +11,13 @@ public abstract class ConvertActionTestBase {
 
     @AfterEach
     void resetState() {
+        state.setDateTimeFormat("yyyy-MM-dd HH:mm:ss");
+        state.setDateTimeUTC(false);
         state.setUpperCase(true);
         state.setSurroundEnable(false);
         state.setSurroundLeft("");
         state.setSurroundRight("");
+        state.setDateTimeMilliseconds(false);
         state.setFormatDelimiter(",");
         state.setFormatGroupSize(3);
         state.setFormatDecimalEnabled(false);

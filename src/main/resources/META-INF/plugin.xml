@@ -24,6 +24,9 @@
 			<li>negative conversion (bit shifting)</li>
 			<li>multi carets</li>
 			<li>shortcuts</li>
+			<li>date string to number system conversion (select a date string and convert to DEC/HEX/OCT/BIN/FORMAT)</li>
+			<li>configurable seconds/milliseconds timestamp output</li>
+			<li>number formatting with grouping, currency symbols, and decimal places</li>
 			<li>settings – date format, surrounding, etc.</li>
 		</ul>
 		<br>
@@ -40,7 +43,9 @@
 
     <change-notes><![CDATA[
 		<ul>
-		    <li>2.1.1 – fix negative conversion</li>
+		    <li>2.2.0 – number formatting conversion (delimiter, group size, decimals, currency), settings validation, custom currency symbols</li>
+		    <li>2.1.2 – migrated to IntelliJ Platform Gradle Plugin 2.x, updated Gradle to 8.13</li>
+		    <li>2.1.1 – upper/lower case setting, fix negative numbers</li>
 		    <li>2.1.0 – settings, date/time conversion</li>
 		    <li>2.0.0 – gradle build</li>
 			<li>1.5.0 – negative conversion</li>

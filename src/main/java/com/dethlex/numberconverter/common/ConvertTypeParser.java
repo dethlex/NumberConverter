@@ -1,14 +1,17 @@
 package com.dethlex.numberconverter.common;
 
+import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 import com.dethlex.numberconverter.date.ConvertDate;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 public final class ConvertTypeParser {
-    private static final String[] typeStarts = {"0x", "0b", "0", "", ""};
+    // Indexed by ConvertType ordinal: HEX=0, BIN=1, OCT=2, DEC=3, DATETIME=4, FORMAT=5
+    private static final String[] typeStarts = {"0x", "0b", "0", "", "", ""};
 
-    private static final int[] typeRadixes = {16, 2, 8, 0, 0};
+    private static final int[] typeRadixes = {16, 2, 8, 0, 0, 0};
 
     public static String startWith(ConvertType type) {
         return typeStarts[type.ordinal()];
@@ -22,7 +25,10 @@ public final class ConvertTypeParser {
         var system = determineType(value);
 
         if (system == ConvertType.DATETIME) {
-            value = String.valueOf(ConvertDate.fromString(value).getTime() / 1000);
+            String dateStr = value.startsWith("-") ? value.substring(1) : value;
+            long millis = Objects.requireNonNull(ConvertDate.fromString(dateStr)).getTime();
+            boolean useMillis = PluginPersistentStateComponent.getInstance().isDateTimeMilliseconds();
+            value = String.valueOf(useMillis ? millis : millis / 1000);
             system = ConvertType.DEC;
         }
 
@@ -44,7 +50,8 @@ public final class ConvertTypeParser {
 
         value = value.toUpperCase();
         for (int i = 0; i < typeStarts.length; i++) {
-            if (value.startsWith(typeStarts[i].toUpperCase())) {
+            var prefix = typeStarts[i].toUpperCase();
+            if (!prefix.isEmpty() && value.startsWith(prefix) && value.length() > prefix.length()) {
                 return ConvertType.values()[i];
             }
         }

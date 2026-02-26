@@ -1,7 +1,9 @@
 package com.dethlex.numberconverter;
 
 import com.dethlex.numberconverter.common.ConvertType;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +18,7 @@ public class ConvertActionGroup extends ActionGroup {
                 new Oct(),
                 new Bin(),
                 new DateTime(),
+                new Format(),
         };
     }
 
@@ -49,9 +52,14 @@ public class ConvertActionGroup extends ActionGroup {
         }
     }
 
-    @NotNull
+    public static class Format extends ConvertAction {
+        public Format() {
+            super(ConvertType.FORMAT);
+        }
+    }
+
     @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent anActionEvent) {
+    public AnAction @NotNull [] getChildren(@Nullable AnActionEvent anActionEvent) {
         return convertActions;
     }
 }

@@ -17,21 +17,32 @@ public final class ConvertDate extends IConverter {
     private final Date date;
 
     public ConvertDate(String value) {
-        value = new ConvertNumber(value).toString(ConvertType.DEC);
+        value = value.strip();
 
         Instant instant;
-        if (value.length() > 10) {
-            instant = Instant.ofEpochMilli(Long.parseLong(value));
+        Date parsed = fromString(value);
+        if (parsed != null) {
+            instant = parsed.toInstant();
         } else {
-            instant = Instant.ofEpochSecond(Long.parseLong(value));
+            String decimal = new ConvertNumber(value).toString(ConvertType.DEC);
+            boolean useMillis = PluginPersistentStateComponent.getInstance().isDateTimeMilliseconds();
+            if (useMillis) {
+                instant = Instant.ofEpochMilli(Long.parseLong(decimal));
+            } else {
+                instant = Instant.ofEpochSecond(Long.parseLong(decimal));
+            }
         }
 
         this.date = Date.from(instant);
     }
 
     public static Date fromString(String value) {
-        String pattern = PluginPersistentStateComponent.getInstance().getDateTimeFormat();
+        var state = PluginPersistentStateComponent.getInstance();
+        String pattern = state.getDateTimeFormat();
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        if (state.isDateTimeUTC()) {
+            formatter.setTimeZone(TimeZone.getTimeZone(ZoneId.from(ZoneOffset.UTC)));
+        }
         try {
             return formatter.parse(value);
         } catch (ParseException e) {
@@ -39,6 +50,7 @@ public final class ConvertDate extends IConverter {
         }
     }
 
+    @Override
     public String toString(ConvertType system) {
         var state = PluginPersistentStateComponent.getInstance();
         String pattern = state.getDateTimeFormat();

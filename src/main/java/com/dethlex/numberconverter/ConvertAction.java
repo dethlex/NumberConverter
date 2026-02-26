@@ -4,16 +4,22 @@ import com.dethlex.numberconverter.common.ConvertType;
 import com.dethlex.numberconverter.common.IConverter;
 import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 import com.dethlex.numberconverter.date.ConvertDate;
+import com.dethlex.numberconverter.format.FormatNumber;
 import com.dethlex.numberconverter.number.ConvertNumber;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Caret;
+import com.intellij.openapi.editor.CaretModel;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +41,10 @@ public class ConvertAction extends AnAction {
         IConverter converter;
 
         try {
+            value = dateToTimestamp(value);
             converter = switch (type) {
                 case DATETIME -> new ConvertDate(value);
+                case FORMAT -> new FormatNumber(value);
                 default -> new ConvertNumber(value);
             };
         } catch (Exception e) {
@@ -44,6 +52,16 @@ public class ConvertAction extends AnAction {
         }
 
         return config.surroundText(converter.toString(type));
+    }
+
+    private String dateToTimestamp(String value) {
+        if (type == ConvertType.DATETIME) return value;
+        Date date = ConvertDate.fromString(value.strip());
+        if (date == null) return value;
+        long ts = config.isDateTimeMilliseconds()
+                ? date.getTime()
+                : date.getTime() / 1000;
+        return String.valueOf(ts);
     }
 
     private Pair<Integer, String> convertAll(@NotNull List<Caret> caretList) {
@@ -126,7 +144,8 @@ public class ConvertAction extends AnAction {
             text += ": " + p.second;
         }
 
-        anActionEvent.getPresentation().setText(text);
-        anActionEvent.getPresentation().setEnabled(p.first > 0);
+        var presentation = anActionEvent.getPresentation();
+        presentation.setText(text, false);
+        presentation.setEnabled(p.first > 0);
     }
 }

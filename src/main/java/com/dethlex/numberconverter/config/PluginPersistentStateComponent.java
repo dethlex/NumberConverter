@@ -10,14 +10,33 @@ import org.jetbrains.annotations.Nullable;
 
 @State(name = "NumberConverterState", storages = {@Storage("numberConverter.xml")})
 public class PluginPersistentStateComponent implements PersistentStateComponent<PluginPersistentStateComponent> {
+    public static final String[] BUILTIN_CURRENCIES = {"", "$", "€", "£", "¥", "₹", "₽", "₩", "₺", "₴", "₿"};
+
     private static PluginPersistentStateComponent unitTestComponent;
 
-    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private boolean surroundEnable = false;
     private String surroundLeft = "";
     private String surroundRight = "";
+
+    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private boolean dateTimeUTC = false;
+    private boolean dateTimeMilliseconds = false;
+
     private boolean isUpperCase = true;
+
+    private String formatDelimiter = ",";
+    private int formatGroupSize = 3;
+    private boolean formatDecimalEnabled = false;
+    private int formatDecimalPlaces = 2;
+    private String formatCurrencySymbol = "";
+    private boolean formatCurrencyPrefix = true;
+    private java.util.List<String> formatCustomCurrencies = new java.util.ArrayList<>();
+
+    public java.util.List<String> getAllCurrencySymbols() {
+        java.util.List<String> all = new java.util.ArrayList<>(java.util.Arrays.asList(BUILTIN_CURRENCIES));
+        all.addAll(formatCustomCurrencies);
+        return all;
+    }
 
     public String getDateTimeFormat() {
         return dateTimeFormat;
@@ -33,6 +52,14 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     public void setDateTimeUTC(boolean dateTimeUTC) {
         this.dateTimeUTC = dateTimeUTC;
+    }
+
+    public boolean isDateTimeMilliseconds() {
+        return dateTimeMilliseconds;
+    }
+
+    public void setDateTimeMilliseconds(boolean dateTimeMilliseconds) {
+        this.dateTimeMilliseconds = dateTimeMilliseconds;
     }
 
     public boolean isSurroundEnable() {
@@ -72,6 +99,62 @@ public class PluginPersistentStateComponent implements PersistentStateComponent<
 
     public void setUpperCase(boolean isUpperCase) {
         this.isUpperCase = isUpperCase;
+    }
+
+    public String getFormatDelimiter() {
+        return formatDelimiter;
+    }
+
+    public void setFormatDelimiter(String formatDelimiter) {
+        this.formatDelimiter = formatDelimiter;
+    }
+
+    public int getFormatGroupSize() {
+        return formatGroupSize;
+    }
+
+    public void setFormatGroupSize(int formatGroupSize) {
+        this.formatGroupSize = formatGroupSize;
+    }
+
+    public boolean isFormatDecimalEnabled() {
+        return formatDecimalEnabled;
+    }
+
+    public void setFormatDecimalEnabled(boolean formatDecimalEnabled) {
+        this.formatDecimalEnabled = formatDecimalEnabled;
+    }
+
+    public int getFormatDecimalPlaces() {
+        return formatDecimalPlaces;
+    }
+
+    public void setFormatDecimalPlaces(int formatDecimalPlaces) {
+        this.formatDecimalPlaces = formatDecimalPlaces;
+    }
+
+    public String getFormatCurrencySymbol() {
+        return formatCurrencySymbol;
+    }
+
+    public void setFormatCurrencySymbol(String formatCurrencySymbol) {
+        this.formatCurrencySymbol = formatCurrencySymbol;
+    }
+
+    public boolean isFormatCurrencyPrefix() {
+        return formatCurrencyPrefix;
+    }
+
+    public void setFormatCurrencyPrefix(boolean formatCurrencyPrefix) {
+        this.formatCurrencyPrefix = formatCurrencyPrefix;
+    }
+
+    public java.util.List<String> getFormatCustomCurrencies() {
+        return formatCustomCurrencies;
+    }
+
+    public void setFormatCustomCurrencies(java.util.List<String> formatCustomCurrencies) {
+        this.formatCustomCurrencies = formatCustomCurrencies;
     }
 
     public static PluginPersistentStateComponent getInstance() {

@@ -2,19 +2,14 @@ package com.dethlex.numberconverter.number;
 
 import com.dethlex.numberconverter.common.ConvertType;
 import com.dethlex.numberconverter.common.ConvertTypeParser;
-import com.dethlex.numberconverter.common.IConverter;
+import com.dethlex.numberconverter.common.NumberConverter;
 import com.dethlex.numberconverter.config.PluginPersistentStateComponent;
 
 import java.math.BigInteger;
 
-public final class ConvertNumber extends IConverter {
-    private final boolean negative;
-    private final BigInteger integer;
-
+public final class ConvertNumber extends NumberConverter {
     public ConvertNumber(String value) {
-        value = value.strip().replaceAll("_", "");
-        this.negative = value.startsWith("-");
-        this.integer = ConvertTypeParser.parse(value);
+        super(value);
     }
 
     // shifting negative non-decimal numbers
@@ -32,11 +27,12 @@ public final class ConvertNumber extends IConverter {
         return integer;
     }
 
+    @Override
     public String toString(ConvertType system) {
         var state = PluginPersistentStateComponent.getInstance();
         var integer = shiftForType(system);
         var number = integer.toString(ConvertTypeParser.radix(system));
-        number =  state.isUpperCase() ? number.toUpperCase() : number.toLowerCase();
+        number = state.isUpperCase() ? number.toUpperCase() : number.toLowerCase();
         return ConvertTypeParser.startWith(system) + number;
     }
 }
